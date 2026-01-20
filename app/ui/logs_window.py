@@ -16,19 +16,20 @@ from app.log_store import read_events
 
 
 TYPE_LABELS = {
-    "bind_added": "Added",
-    "bind_edited": "Edited",
-    "bind_deleted": "Deleted",
-    "profile_switched": "Profile",
-    "profile_created": "Profile",
-    "profile_renamed": "Profile",
-    "profile_deleted": "Profile",
-    "import": "Import",
-    "export": "Export",
-    "settings_changed": "Settings",
-    "personalization_changed": "Personalization",
-    "update_check": "Update",
-    "update_download": "Update",
+    "bind_added": "Добавлено",
+    "bind_edited": "Изменено",
+    "bind_deleted": "Удалено",
+    "profile_switched": "Смена профиля",
+    "profile_created": "Смена профиля",
+    "profile_renamed": "Смена профиля",
+    "profile_deleted": "Смена профиля",
+    "import": "Импорт",
+    "export": "Экспорт",
+    "settings_changed": "Настройки",
+    "personalization_changed": "Персонализация",
+    "update_check": "Обновление",
+    "update_download": "Обновление",
+    "engine_debug": "Отладка",
 }
 
 TYPE_COLORS = {
@@ -45,6 +46,7 @@ TYPE_COLORS = {
     "personalization_changed": "#2a1f1f",
     "update_check": "#1f2630",
     "update_download": "#1f2630",
+    "engine_debug": "#2a1f1f",
 }
 
 
@@ -67,7 +69,7 @@ class LogsWindow(QWidget):
         self.search.setPlaceholderText("Поиск по логам")
         self.filter = QComboBox()
         self.filter.addItems(
-            ["All", "Added", "Edited", "Deleted", "Import", "Export", "Profile", "Settings", "Personalization", "Update"]
+            ["Все", "Добавлено", "Изменено", "Удалено", "Импорт", "Экспорт", "Смена профиля", "Настройки", "Персонализация", "Обновление", "Отладка"]
         )
         controls_layout.addWidget(self.search, 1)
         controls_layout.addWidget(self.filter)
@@ -102,8 +104,8 @@ class LogsWindow(QWidget):
 
         filtered = []
         for event in self._events:
-            label = TYPE_LABELS.get(event.get("type", ""), "Other")
-            if filter_label != "All" and label != filter_label:
+            label = TYPE_LABELS.get(event.get("type", ""), "Другое")
+            if filter_label != "Все" and label != filter_label:
                 continue
             if query:
                 haystack = " ".join(

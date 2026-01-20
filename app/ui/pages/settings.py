@@ -32,10 +32,13 @@ class SettingsPage(QWidget):
         triggers_layout.addWidget(QLabel("Префиксы триггера"))
         self.prefixes_input = QLineEdit()
         self.allow_no_prefix = QCheckBox("Разрешить триггер без префикса")
+        self.auto_layout = QCheckBox("Авто-конверсия RU↔EN, если триггер не найден")
         self.prefixes_input.editingFinished.connect(self.emit_change)
         self.allow_no_prefix.stateChanged.connect(self.emit_change)
+        self.auto_layout.stateChanged.connect(self.emit_change)
         triggers_layout.addWidget(self.prefixes_input)
         triggers_layout.addWidget(self.allow_no_prefix)
+        triggers_layout.addWidget(self.auto_layout)
 
         commits_card = card_container()
         commits_layout = card_layout(commits_card)
@@ -99,6 +102,9 @@ class SettingsPage(QWidget):
         self.allow_no_prefix.blockSignals(True)
         self.allow_no_prefix.setChecked(settings.get("allow_no_prefix", False))
         self.allow_no_prefix.blockSignals(False)
+        self.auto_layout.blockSignals(True)
+        self.auto_layout.setChecked(settings.get("auto_layout", True))
+        self.auto_layout.blockSignals(False)
         commit_keys = set(settings.get("commit_keys", []))
         for cb, key in (
             (self.space_cb, "space"),
@@ -129,6 +135,7 @@ class SettingsPage(QWidget):
         payload = {
             "trigger_prefixes": prefixes or ["."],
             "allow_no_prefix": self.allow_no_prefix.isChecked(),
+            "auto_layout": self.auto_layout.isChecked(),
             "commit_keys": commit_keys,
             "hotkeys": {
                 "toggle": self.toggle_hotkey.text().strip(),

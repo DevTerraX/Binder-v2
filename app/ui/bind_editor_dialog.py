@@ -89,6 +89,8 @@ class BindEditorDialog(QDialog):
 
         trigger_hint = QLabel("Префикс берется из настроек. Триггер хранится без префикса.")
         trigger_hint.setStyleSheet("color: #a7a7a7;")
+        layout_hint = QLabel("Можно писать триггер на русском — авто-конверсия найдёт соответствие.")
+        layout_hint.setStyleSheet("color: #a7a7a7;")
 
         form.addRow("Название:", self.name_input)
         form.addRow("Категория:", self.category_input)
@@ -127,6 +129,7 @@ class BindEditorDialog(QDialog):
         left_layout.addWidget(title)
         left_layout.addLayout(form)
         left_layout.addWidget(trigger_hint)
+        left_layout.addWidget(layout_hint)
         left_layout.addWidget(QLabel("Тип:"))
         left_layout.addWidget(type_row)
         left_layout.addWidget(QLabel("Контент:"))

@@ -28,6 +28,7 @@ class DataStore:
                         "commit_keys": ["space"],
                         "binder_enabled": True,
                         "allow_no_prefix": False,
+                        "auto_layout": True,
                         "hotkeys": {
                             "toggle": "Ctrl+Alt+B",
                             "open": "Ctrl+Alt+M",

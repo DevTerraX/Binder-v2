@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
 )
 
 from app.data_store import DataStore
+from app.engine import BinderEngine
 from app.log_store import append_event
 from .bind_editor_dialog import BindEditorDialog
 from .logs_window import LogsWindow
@@ -35,6 +36,8 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(1100, 720)
         self.logs_window: LogsWindow | None = None
         self.store = DataStore()
+        self.engine = BinderEngine(append_event)
+        self.engine.start()
 
         root = QWidget()
         root_layout = QHBoxLayout(root)
@@ -235,6 +238,9 @@ class MainWindow(QMainWindow):
             self.refresh_all()
 
     def handle_profile_delete(self, profile_id: str) -> None:
+        if len(self.store.list_profiles()) <= 1:
+            QMessageBox.information(self, "Удаление профиля", "Нельзя удалить последний профиль.")
+            return
         profile = self.store.get_profile(profile_id)
         result = QMessageBox.question(
             self,
@@ -329,8 +335,29 @@ class MainWindow(QMainWindow):
         bind_data = self.store.get_bind(bind_id)
         if not bind_data:
             return
-        text = bind_data.get("content", "")
-        QApplication.clipboard().setText(text)
+        base_trigger = bind_data.get("trigger", "")
+        suffix = 2
+        new_trigger = f"{base_trigger}_copy"
+        existing = self.store.trigger_set()
+        while new_trigger in existing:
+            suffix += 1
+            new_trigger = f"{base_trigger}_copy{suffix}"
+        new_bind = dict(bind_data)
+        new_bind.pop("id", None)
+        new_bind["trigger"] = new_trigger
+        new_bind["title"] = f"{bind_data.get('title', '')} (копия)".strip()
+        created = self.store.add_bind(new_bind)
+        QApplication.clipboard().setText(created.get("content", ""))
+        append_event(
+            {
+                "type": "bind_added",
+                "entity": "bind",
+                "profile_id": self.store.get_active_profile().get("id"),
+                "profile_name": self.store.get_active_profile().get("name"),
+                "meta": {"trigger": created.get("trigger"), "title": created.get("title"), "copied_from": bind_id},
+            }
+        )
+        self.refresh_binds()
 
     def handle_binds_import(self) -> None:
         self.handle_import_into_profile(self.store.get_active_profile().get("id"))
@@ -349,6 +376,7 @@ class MainWindow(QMainWindow):
                 "meta": {"binder_enabled": enabled},
             }
         )
+        self.update_engine_config()
 
     def refresh_binds(self) -> None:
         if isinstance(self.binds_page, binds.BindsPage):
@@ -358,6 +386,7 @@ class MainWindow(QMainWindow):
             self.binds_page.set_prefix(prefix)
             self.binds_page.set_binds(self.store.list_binds(profile.get("id")))
             self.binds_page.set_binder_enabled(settings_data.get("binder_enabled", True))
+        self.update_engine_config()
 
     def handle_personalization_changed(self, payload: dict) -> None:
         profile = self.store.get_active_profile()
@@ -371,6 +400,7 @@ class MainWindow(QMainWindow):
                 "meta": payload,
             }
         )
+        self.update_engine_config()
 
     def handle_settings_changed(self, payload: dict) -> None:
         profile = self.store.get_active_profile()
@@ -387,6 +417,7 @@ class MainWindow(QMainWindow):
             }
         )
         self.refresh_binds()
+        self.update_engine_config()
 
     def handle_export_profile(self, profile_id: str) -> None:
         profile = self.store.get_profile(profile_id)
@@ -515,6 +546,17 @@ class MainWindow(QMainWindow):
             return None
         return None
 
+    def update_engine_config(self) -> None:
+        profile = self.store.get_active_profile()
+        settings_data = profile.get("settings", {})
+        binds_list = self.store.list_binds(profile.get("id"))
+        variables = profile.get("variables", {})
+        self.engine.update_config(profile, settings_data, binds_list, variables)
+
+    def closeEvent(self, event) -> None:
+        self.engine.stop()
+        super().closeEvent(event)
+
     def refresh_all(self) -> None:
         profiles_list = self.store.list_profiles()
         active = self.store.get_active_profile()
@@ -527,3 +569,4 @@ class MainWindow(QMainWindow):
         self.personalization_page.set_values(active.get("variables", {}))
         self.settings_page.set_settings(settings_data)
         self.import_export_page.set_profiles(profiles_list, active.get("id"))
+        self.update_engine_config()
