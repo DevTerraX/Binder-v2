@@ -178,18 +178,26 @@ class BinderEngine:
     def _emit_bind(self, bind: dict) -> None:
         bind_type = bind.get("type", "Text")
         content = bind.get("content", "") or ""
+        cursor_back = bind.get("cursor_back", 0) or 0
         if bind_type == "Multi":
             lines = [line for line in content.splitlines() if line.strip()]
             for index, line in enumerate(lines):
                 self._kb.write(apply_variables(line, self._variables))
                 if index < len(lines) - 1:
                     self._kb.send("enter")
+            self._move_cursor_back(cursor_back)
         else:
             self._kb.write(apply_variables(content, self._variables))
+            self._move_cursor_back(cursor_back)
 
     def _erase_token(self, count: int) -> None:
         for _ in range(max(0, count)):
             self._kb.send("backspace")
+
+    def _move_cursor_back(self, count: int) -> None:
+        steps = max(0, int(count or 0))
+        for _ in range(steps):
+            self._kb.send("left")
 
     def _debug(self, reason: str, meta: dict[str, Any]) -> None:
         self._log(

@@ -1,0 +1,2427 @@
+{
+  "name": "imported",
+  "settings": {
+    "trigger_prefixes": [
+      ".",
+      "/"
+    ],
+    "commit_keys": [
+      "space"
+    ],
+    "binder_enabled": true,
+    "allow_no_prefix": false,
+    "auto_layout": true,
+    "hotkeys": {
+      "toggle": "Ctrl+Alt+B",
+      "open": "Ctrl+Alt+M",
+      "profile_switch": ""
+    },
+    "apps_filter": {
+      "only": "",
+      "exclude": ""
+    }
+  },
+  "variables": {
+    "gender": "male",
+    "discord_me": "me#9999",
+    "discord_zga": "zga#5678",
+    "discord_ga": "admin#1234",
+    "me_name": "AdminName"
+  },
+  "hotkeys": [],
+  "binds": [
+    {
+      "title": ".лспд",
+      "category": "Подсказки",
+      "trigger": "лспд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 429 -980 30.50",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".бол",
+      "category": "Подсказки",
+      "trigger": "бол",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 287.70 -578.35 50",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".шд",
+      "category": "Подсказки",
+      "trigger": "шд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -434.87 6024.54 31.50",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фз",
+      "category": "Подсказки",
+      "trigger": "фз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -2336 3257 32.50",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".мэр",
+      "category": "Подсказки",
+      "trigger": "мэр",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -534.70 -222.07 37.60",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".визл",
+      "category": "Подсказки",
+      "trigger": "визл",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -593 -929 24",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фиб",
+      "category": "Подсказки",
+      "trigger": "фиб",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 2527 -377 93",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".бал",
+      "category": "Подсказки",
+      "trigger": "бал",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -70.06 -1824.64 26.94",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ваг",
+      "category": "Подсказки",
+      "trigger": "ваг",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 967 -1817 31",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фэм",
+      "category": "Подсказки",
+      "trigger": "фэм",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -204.29 -1513.69 31.60",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".бладс",
+      "category": "Подсказки",
+      "trigger": "бладс",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 496 -1330 29.40",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".мара",
+      "category": "Подсказки",
+      "trigger": "мара",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 1437.61 -1509.64 62.40",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".лкн",
+      "category": "Подсказки",
+      "trigger": "лкн",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 1385 1154 114.40",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".рм",
+      "category": "Подсказки",
+      "trigger": "рм",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1526 858 181",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".як",
+      "category": "Подсказки",
+      "trigger": "як",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1556.36 113.07 57",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".мекс",
+      "category": "Подсказки",
+      "trigger": "мекс",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 381.03 23.12 91.40",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ам",
+      "category": "Подсказки",
+      "trigger": "ам",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1895.23 2027.19 141",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".лост",
+      "category": "Подсказки",
+      "trigger": "лост",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 969.84 -128.40 74.40",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".аод",
+      "category": "Подсказки",
+      "trigger": "аод",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 1995.99 3062.44 47.06",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".груб",
+      "category": "Подсказки",
+      "trigger": "груб",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -3022 105 11.30",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".клаб",
+      "category": "Подсказки",
+      "trigger": "клаб",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 1588.65 6445.38 25",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".рич",
+      "category": "Подсказки",
+      "trigger": "рич",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1302.49 294.52 64.50",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".манор",
+      "category": "Подсказки",
+      "trigger": "манор",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -58.20 343.73 111.80",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".конт",
+      "category": "Подсказки",
+      "trigger": "конт",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1865.51 -355.96 57",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".хум",
+      "category": "Подсказки",
+      "trigger": "хум",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 3569.54 3789.48 30",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".мейз",
+      "category": "Подсказки",
+      "trigger": "мейз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -75 -818 326",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".каз",
+      "category": "Подсказки",
+      "trigger": "каз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 1110.117 217.0512 -49.56448",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".аш",
+      "category": "Подсказки",
+      "trigger": "аш",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -620 -2264 6",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".гг",
+      "category": "Подсказки",
+      "trigger": "гг",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -257 -2023 30",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".бургер",
+      "category": "Подсказки",
+      "trigger": "бургер",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1171.31 -890.20 13.90",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".багама",
+      "category": "Подсказки",
+      "trigger": "багама",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1391.30 -585.35 30",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".кайо",
+      "category": "Подсказки",
+      "trigger": "кайо",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 4488.58 -4493.52 4",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".авиа",
+      "category": "Подсказки",
+      "trigger": "авиа",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 3035.21 -4688.55 15",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".мол",
+      "category": "Подсказки",
+      "trigger": "мол",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 61.67 -1751.80 47",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".трас",
+      "category": "Подсказки",
+      "trigger": "трас",
+      "help_section": "hints",
+      "type": "Text",
+      "content": "d",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".аук",
+      "category": "Подсказки",
+      "trigger": "аук",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -833 -699.50 27",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".бокс",
+      "category": "Подсказки",
+      "trigger": "бокс",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 8.56 -1658.55 28.71",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".бар",
+      "category": "Подсказки",
+      "trigger": "бар",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -305.09 6259.59 30.92",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".бк",
+      "category": "Подсказки",
+      "trigger": "бк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 500.44 109.79 96.49",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ванила",
+      "category": "Подсказки",
+      "trigger": "ванила",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 131.33 -1302.93 29.23",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".починка",
+      "category": "Подсказки",
+      "trigger": "починка",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp -1430.45 -450.5 35.91",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".лск4",
+      "category": "Подсказки",
+      "trigger": "лск4",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ctp 1175.47 2671.33 37.85",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ачек",
+      "category": "Подсказки",
+      "trigger": "ачек",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajailcheck",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".х",
+      "category": "Подсказки",
+      "trigger": "х",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hp 100",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 4
+    },
+    {
+      "title": "/sm",
+      "category": "Подсказки",
+      "trigger": "sm",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/setmaterials",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ыь",
+      "category": "Подсказки",
+      "trigger": "ыь",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/setmaterials",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/tn",
+      "category": "Подсказки",
+      "trigger": "tn",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/tempname",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ет",
+      "category": "Подсказки",
+      "trigger": "ет",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/tempname",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".яяв",
+      "category": "Подсказки",
+      "trigger": "яяв",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/zzdebug",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/zzd",
+      "category": "Подсказки",
+      "trigger": "zzd",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/zzdebug",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/amph",
+      "category": "Подсказки",
+      "trigger": "amph",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/addamphitheater",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фьзр",
+      "category": "Подсказки",
+      "trigger": "фьзр",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/addamphitheater",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/ramph",
+      "category": "Подсказки",
+      "trigger": "ramph",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/removeamphitheater",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".кфьзр",
+      "category": "Подсказки",
+      "trigger": "кфьзр",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/removeamphitheater",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/gzone",
+      "category": "Подсказки",
+      "trigger": "gzone",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/togglegreenzone",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".пящту",
+      "category": "Подсказки",
+      "trigger": "пящту",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/togglegreenzone",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/mcheck",
+      "category": "Подсказки",
+      "trigger": "mcheck",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/mutecheck",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ьсрусл",
+      "category": "Подсказки",
+      "trigger": "ьсрусл",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/mutecheck",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ьгеусрусл",
+      "category": "Подсказки",
+      "trigger": "ьгеусрусл",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/mutecheck",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".гтофшд",
+      "category": "Подсказки",
+      "trigger": "гтофшд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/unjail",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".цфкт",
+      "category": "Подсказки",
+      "trigger": "цфкт",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/warn",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/ld",
+      "category": "Подсказки",
+      "trigger": "ld",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/lastdriver",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".дв",
+      "category": "Подсказки",
+      "trigger": "дв",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/lastdriver",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/af",
+      "category": "Подсказки",
+      "trigger": "af",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ainfect",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фа",
+      "category": "Подсказки",
+      "trigger": "фа",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ainfect",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/sk",
+      "category": "Подсказки",
+      "trigger": "sk",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/skick",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ыл",
+      "category": "Подсказки",
+      "trigger": "ыл",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/skick",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/k",
+      "category": "Подсказки",
+      "trigger": "k",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/kick",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".л",
+      "category": "Подсказки",
+      "trigger": "л",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/kick",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/ai",
+      "category": "Подсказки",
+      "trigger": "ai",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/auninvite",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фш",
+      "category": "Подсказки",
+      "trigger": "фш",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/auninvite",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".аи",
+      "category": "Подсказки",
+      "trigger": "аи",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/fb",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".гтьгеу",
+      "category": "Подсказки",
+      "trigger": "гтьгеу",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/unmute",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".пуезшт",
+      "category": "Подсказки",
+      "trigger": "пуезшт",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/getpin",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".пшв",
+      "category": "Подсказки",
+      "trigger": "пшв",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/gid",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фвьшты",
+      "category": "Подсказки",
+      "trigger": "фвьшты",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/admins",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фштаусе",
+      "category": "Подсказки",
+      "trigger": "фштаусе",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ainfect",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".умутещт",
+      "category": "Подсказки",
+      "trigger": "умутещт",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/eventon",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".умутещаа",
+      "category": "Подсказки",
+      "trigger": "умутещаа",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/eventoff",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".пц",
+      "category": "Подсказки",
+      "trigger": "пц",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/gw",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".мур",
+      "category": "Подсказки",
+      "trigger": "мур",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/veh",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ашчсфк",
+      "category": "Подсказки",
+      "trigger": "ашчсфк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/fixcar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".уьздуфвук",
+      "category": "Подсказки",
+      "trigger": "уьздуфвук",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/templeader",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/tl",
+      "category": "Подсказки",
+      "trigger": "tl",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/templeader",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ед",
+      "category": "Подсказки",
+      "trigger": "ед",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/templeader",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ылшсл",
+      "category": "Подсказки",
+      "trigger": "ылшсл",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/skick",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".кузфшк",
+      "category": "Подсказки",
+      "trigger": "кузфшк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/repair",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фгтшмшеу",
+      "category": "Подсказки",
+      "trigger": "фгтшмшеу",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/auninvite",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".учсфк",
+      "category": "Подсказки",
+      "trigger": "учсфк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/excar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".агуд",
+      "category": "Подсказки",
+      "trigger": "агуд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/fuel",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".згддекгтл",
+      "category": "Подсказки",
+      "trigger": "згддекгтл",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/pulltunk",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".акууя",
+      "category": "Подсказки",
+      "trigger": "акууя",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/freez",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".езсфк",
+      "category": "Подсказки",
+      "trigger": "езсфк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/tpcar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".дфыевкшмук",
+      "category": "Подсказки",
+      "trigger": "дфыевкшмук",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/lastdriver",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".вудшеуь",
+      "category": "Подсказки",
+      "trigger": "вудшеуь",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/delitem",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/gc",
+      "category": "Подсказки",
+      "trigger": "gc",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/getcar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".пс",
+      "category": "Подсказки",
+      "trigger": "пс",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/getcar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фв",
+      "category": "Подсказки",
+      "trigger": "фв",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/admins",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/ad",
+      "category": "Подсказки",
+      "trigger": "ad",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/admins",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".з",
+      "category": "Подсказки",
+      "trigger": "з",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/players",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/p",
+      "category": "Подсказки",
+      "trigger": "p",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/players",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".здфнукы",
+      "category": "Подсказки",
+      "trigger": "здфнукы",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/players",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".рес",
+      "category": "Подсказки",
+      "trigger": "рес",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/rescue",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ез",
+      "category": "Подсказки",
+      "trigger": "ез",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/tp",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ызус",
+      "category": "Подсказки",
+      "trigger": "ызус",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/spec",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ызусщаа",
+      "category": "Подсказки",
+      "trigger": "ызусщаа",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/specoff {Enter} {F5}",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фыьы",
+      "category": "Подсказки",
+      "trigger": "фыьы",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/asms",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ф",
+      "category": "Подсказки",
+      "trigger": "ф",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/a",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/sp",
+      "category": "Подсказки",
+      "trigger": "sp",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/spec",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ыз",
+      "category": "Подсказки",
+      "trigger": "ыз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/spec",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/so",
+      "category": "Подсказки",
+      "trigger": "so",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/specoff {Enter} {F5}",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ыщ",
+      "category": "Подсказки",
+      "trigger": "ыщ",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/specoff {Enter} {F5}",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/kill",
+      "category": "Подсказки",
+      "trigger": "kill",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hp 0",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 2
+    },
+    {
+      "title": ".лшдд",
+      "category": "Подсказки",
+      "trigger": "лшдд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hp 0",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 2
+    },
+    {
+      "title": ".штсфк",
+      "category": "Подсказки",
+      "trigger": "штсфк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/incar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".пр",
+      "category": "Подсказки",
+      "trigger": "пр",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/gh",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".штм",
+      "category": "Подсказки",
+      "trigger": "штм",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/inv",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".шв",
+      "category": "Подсказки",
+      "trigger": "шв",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/id",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".рз",
+      "category": "Подсказки",
+      "trigger": "рз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hp",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".од",
+      "category": "Подсказки",
+      "trigger": "од",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фофшд",
+      "category": "Подсказки",
+      "trigger": "фофшд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".лшсл",
+      "category": "Подсказки",
+      "trigger": "лшсл",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/kick",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".вд",
+      "category": "Подсказки",
+      "trigger": "вд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/dl",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".уыз",
+      "category": "Подсказки",
+      "trigger": "уыз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/esp",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".пуесфк",
+      "category": "Подсказки",
+      "trigger": "пуесфк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/getcar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ифт",
+      "category": "Подсказки",
+      "trigger": "ифт",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ban",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".вудмур",
+      "category": "Подсказки",
+      "trigger": "вудмур",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/delveh",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ьез",
+      "category": "Подсказки",
+      "trigger": "ьез",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/mtp",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фмур",
+      "category": "Подсказки",
+      "trigger": "фмур",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/aveh",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".рфквифт",
+      "category": "Подсказки",
+      "trigger": "рфквифт",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hardban",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ьгеу",
+      "category": "Подсказки",
+      "trigger": "ьгеу",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/mute",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ср",
+      "category": "Подсказки",
+      "trigger": "ср",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/chide",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/ch",
+      "category": "Подсказки",
+      "trigger": "ch",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/chide",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".куысгу",
+      "category": "Подсказки",
+      "trigger": "куысгу",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/rescue",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ыуевшь",
+      "category": "Подсказки",
+      "trigger": "ыуевшь",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/setdim",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/sd",
+      "category": "Подсказки",
+      "trigger": "sd",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/setdim",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ыв",
+      "category": "Подсказки",
+      "trigger": "ыв",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/setdim",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".сршву",
+      "category": "Подсказки",
+      "trigger": "сршву",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/chide",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".афк",
+      "category": "Подсказки",
+      "trigger": "афк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/a afk мин",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 4
+    },
+    {
+      "title": ".фгтсгаа",
+      "category": "Подсказки",
+      "trigger": "фгтсгаа",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/auncuff",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".фсгаа",
+      "category": "Подсказки",
+      "trigger": "фсгаа",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/acuff",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".акууяф",
+      "category": "Подсказки",
+      "trigger": "акууяф",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/freeza",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ызфцтсфк",
+      "category": "Подсказки",
+      "trigger": "ызфцтсфк",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/spawncar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": "/sc",
+      "category": "Подсказки",
+      "trigger": "sc",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/spawncar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".ыс",
+      "category": "Подсказки",
+      "trigger": "ыс",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/spawncar",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      }
+    },
+    {
+      "title": ".хард",
+      "category": "Подсказки",
+      "trigger": "хард",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hardban 8888 Cheats",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 12
+    },
+    {
+      "title": ".хард9",
+      "category": "Подсказки",
+      "trigger": "хард9",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hardban 9999 Cheats",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 12
+    },
+    {
+      "title": ".секс",
+      "category": "Подсказки",
+      "trigger": "секс",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/warn Секс. аним. без отыгровок",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 26
+    },
+    {
+      "title": ".нрд",
+      "category": "Подсказки",
+      "trigger": "нрд",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 15 nonRP Drive",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".нрд25",
+      "category": "Подсказки",
+      "trigger": "нрд25",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 25 nonRP Drive",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".нрд45",
+      "category": "Подсказки",
+      "trigger": "нрд45",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 45 nonRP Drive",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".нрд70",
+      "category": "Подсказки",
+      "trigger": "нрд70",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 70 nonRP Drive",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".нрд90",
+      "category": "Подсказки",
+      "trigger": "нрд90",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 90 nonRP Drive",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".нрп",
+      "category": "Подсказки",
+      "trigger": "нрп",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 15 nonRP Поведение",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 19
+    },
+    {
+      "title": ".нрп25",
+      "category": "Подсказки",
+      "trigger": "нрп25",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 25 nonRP Поведение",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 19
+    },
+    {
+      "title": ".нрп45",
+      "category": "Подсказки",
+      "trigger": "нрп45",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 45 nonRP Поведение",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 19
+    },
+    {
+      "title": ".нрп70",
+      "category": "Подсказки",
+      "trigger": "нрп70",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 70 nonRP Поведение",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 19
+    },
+    {
+      "title": ".нрп90",
+      "category": "Подсказки",
+      "trigger": "нрп90",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 90 nonRP Поведение",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 19
+    },
+    {
+      "title": ".дб",
+      "category": "Подсказки",
+      "trigger": "дб",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 30 DB",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".дб45",
+      "category": "Подсказки",
+      "trigger": "дб45",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 45 DB",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".дб60",
+      "category": "Подсказки",
+      "trigger": "дб60",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 60 DB",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".дб75",
+      "category": "Подсказки",
+      "trigger": "дб75",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 75 DB",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".дб90",
+      "category": "Подсказки",
+      "trigger": "дб90",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 90 DB",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".дм",
+      "category": "Подсказки",
+      "trigger": "дм",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 100 DM",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 7
+    },
+    {
+      "title": ".пг",
+      "category": "Подсказки",
+      "trigger": "пг",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 35 PG",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".пг55",
+      "category": "Подсказки",
+      "trigger": "пг55",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 55 PG",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".пг75",
+      "category": "Подсказки",
+      "trigger": "пг75",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 75 PG",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".пг90",
+      "category": "Подсказки",
+      "trigger": "пг90",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 90 PG",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 6
+    },
+    {
+      "title": ".муз",
+      "category": "Подсказки",
+      "trigger": "муз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/mute 30 Music in ZZ",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".муз60",
+      "category": "Подсказки",
+      "trigger": "муз60",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/mute 60 Music in ZZ",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".смник",
+      "category": "Подсказки",
+      "trigger": "смник",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 720 Смените Имя_Фамилия согласно правилам сервера",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 50
+    },
+    {
+      "title": ".ккапт",
+      "category": "Подсказки",
+      "trigger": "ккапт",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/kick Помеха капту",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 13
+    },
+    {
+      "title": ".кбиз",
+      "category": "Подсказки",
+      "trigger": "кбиз",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/kick Помеха бизвару",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 15
+    },
+    {
+      "title": ".квзп",
+      "category": "Подсказки",
+      "trigger": "квзп",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/kick Помеха ВЗП",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 11
+    },
+    {
+      "title": ".квзм",
+      "category": "Подсказки",
+      "trigger": "квзм",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/kick Помеха ВЗМ",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 11
+    },
+    {
+      "title": ".взм45",
+      "category": "Подсказки",
+      "trigger": "взм45",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 35 Нарушение правил ВЗМ(Стрельба в/из нейтрала)",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 24
+    },
+    {
+      "title": ".взм90",
+      "category": "Подсказки",
+      "trigger": "взм90",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/ajail 90 Нарушение правил ВЗМ",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 25
+    },
+    {
+      "title": ".оса30",
+      "category": "Подсказки",
+      "trigger": "оса30",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hardban 30 Оскорбление администрации",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 29
+    },
+    {
+      "title": ".оса15",
+      "category": "Подсказки",
+      "trigger": "оса15",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hardban 14 Оскорбление администрации",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 29
+    },
+    {
+      "title": ".оса10",
+      "category": "Подсказки",
+      "trigger": "оса10",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hardban 10 Оскорбление администрации",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 29
+    },
+    {
+      "title": ".оса",
+      "category": "Подсказки",
+      "trigger": "оса",
+      "help_section": "hints",
+      "type": "Command",
+      "content": "/hardban 7 Оскорбление администрации",
+      "options": {
+        "delete_trigger": true,
+        "case_sensitive": false,
+        "only_prefix": true
+      },
+      "cursor_back": 28
+    }
+  ]
+}

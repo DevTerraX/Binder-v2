@@ -40,10 +40,7 @@ class HelpSection(QWidget):
         self.search.setPlaceholderText("Поиск")
         self.filter = QComboBox()
         self.filter.addItem("Все")
-
-        categories = sorted({item.get("category", "Другое") for item in items})
-        for category in categories:
-            self.filter.addItem(category)
+        self._rebuild_categories(items)
 
         controls_layout.addWidget(self.search, 1)
         controls_layout.addWidget(self.filter)
@@ -61,6 +58,14 @@ class HelpSection(QWidget):
         self.search.textChanged.connect(self.refresh)
         self.filter.currentIndexChanged.connect(self.refresh)
 
+        self.refresh()
+
+    def set_items(self, items: list[dict]) -> None:
+        current = self.filter.currentText()
+        self._items = items
+        self._rebuild_categories(items)
+        index = self.filter.findText(current)
+        self.filter.setCurrentIndex(index if index != -1 else 0)
         self.refresh()
 
     def refresh(self) -> None:
@@ -98,6 +103,15 @@ class HelpSection(QWidget):
             empty.setStyleSheet("color: #9a9a9a;")
             empty.setAlignment(Qt.AlignLeft)
             self.list_layout.addWidget(empty)
+
+    def _rebuild_categories(self, items: list[dict]) -> None:
+        self.filter.blockSignals(True)
+        self.filter.clear()
+        self.filter.addItem("Все")
+        categories = sorted({item.get("category", "Другое") for item in items})
+        for category in categories:
+            self.filter.addItem(category)
+        self.filter.blockSignals(False)
 
 
 class HelpPage(QWidget):
@@ -145,15 +159,22 @@ class HelpPage(QWidget):
         content_layout.setSpacing(12)
 
         data = _load_help_content()
-        tips_items = data.get("tips", [])
-        teleports_items = data.get("teleports", [])
-        news_items = data.get("news", [])
-        changelog_items = data.get("changelog", [])
+        self._base_items = {
+            "tips": data.get("tips", []),
+            "teleports": data.get("teleports", []),
+            "news": data.get("news", []),
+            "changelog": data.get("changelog", []),
+        }
 
-        self.stack.addWidget(HelpSection("Подсказки", tips_items))
-        self.stack.addWidget(HelpSection("Телепорты", teleports_items))
-        self.stack.addWidget(HelpSection("Новости", news_items))
-        self.stack.addWidget(HelpSection("Журнал изменений", changelog_items))
+        self.tips_section = HelpSection("Подсказки", self._base_items["tips"])
+        self.teleports_section = HelpSection("Телепорты", self._base_items["teleports"])
+        self.news_section = HelpSection("Новости", self._base_items["news"])
+        self.changelog_section = HelpSection("Журнал изменений", self._base_items["changelog"])
+
+        self.stack.addWidget(self.tips_section)
+        self.stack.addWidget(self.teleports_section)
+        self.stack.addWidget(self.news_section)
+        self.stack.addWidget(self.changelog_section)
 
         content_layout.addWidget(self.stack)
 
@@ -166,6 +187,18 @@ class HelpPage(QWidget):
         layout.addStretch(1)
 
         self.update_btn = update_btn
+
+    def set_dynamic_items(self, dynamic: dict[str, list[dict]]) -> None:
+        merged = {
+            "tips": self._base_items["tips"] + dynamic.get("tips", []),
+            "teleports": self._base_items["teleports"] + dynamic.get("teleports", []),
+            "news": self._base_items["news"] + dynamic.get("news", []),
+            "changelog": self._base_items["changelog"] + dynamic.get("changelog", []),
+        }
+        self.tips_section.set_items(merged["tips"])
+        self.teleports_section.set_items(merged["teleports"])
+        self.news_section.set_items(merged["news"])
+        self.changelog_section.set_items(merged["changelog"])
 
 
 def build_page() -> tuple[QWidget, QPushButton]:

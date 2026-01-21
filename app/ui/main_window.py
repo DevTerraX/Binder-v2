@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (
 
 from app.data_store import DataStore
 from app.engine import BinderEngine
-from app.hotkeys import get_keyboard, normalize_hotkey
+from app.hotkeys import get_keyboard, is_hotkey_valid, normalize_hotkey
 from app.log_store import append_event
 from .bind_editor_dialog import BindEditorDialog
 from .hotkey_editor_dialog import HotkeyEditorDialog
@@ -158,6 +158,7 @@ class MainWindow(QMainWindow):
         stack.addWidget(self.import_export_page)
 
         help_page_widget, update_btn = help_page.build_page()
+        self.help_page = help_page_widget
         update_btn.clicked.connect(self.open_update_dialog)
         stack.addWidget(help_page_widget)
         self.refresh_all()
@@ -175,10 +176,16 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def open_bind_editor_create(self) -> None:
+        profile = self.store.get_active_profile()
+        settings_data = profile.get("settings", {})
+        variables = profile.get("variables", {})
         dialog = BindEditorDialog(
             self,
             mode="create",
             existing_triggers=self.store.trigger_set(),
+            allowed_prefixes=settings_data.get("trigger_prefixes", ["."]) or ["."],
+            allow_no_prefix=bool(settings_data.get("allow_no_prefix", False)),
+            variables=variables,
         )
         dialog.saved.connect(self.handle_bind_saved)
         dialog.exec()
@@ -187,11 +194,17 @@ class MainWindow(QMainWindow):
         bind_data = self.store.get_bind(bind_id)
         if not bind_data:
             return
+        profile = self.store.get_active_profile()
+        settings_data = profile.get("settings", {})
+        variables = profile.get("variables", {})
         dialog = BindEditorDialog(
             self,
             mode="edit",
             existing_triggers=self.store.trigger_set(exclude_id=bind_id),
             bind_data=bind_data,
+            allowed_prefixes=settings_data.get("trigger_prefixes", ["."]) or ["."],
+            allow_no_prefix=bool(settings_data.get("allow_no_prefix", False)),
+            variables=variables,
         )
         dialog.saved.connect(self.handle_bind_saved)
         dialog.deleted.connect(self.handle_bind_deleted)
@@ -721,7 +734,38 @@ class MainWindow(QMainWindow):
         self.personalization_page.set_values(active.get("variables", {}))
         self.settings_page.set_settings(settings_data)
         self.import_export_page.set_profiles(profiles_list, active.get("id"))
+        self._refresh_help_sections(active)
         self.update_engine_config()
+
+    def _refresh_help_sections(self, profile: dict) -> None:
+        if not hasattr(self, "help_page"):
+            return
+        binds = profile.get("binds", []) or []
+        dynamic = {"tips": [], "teleports": [], "news": [], "changelog": []}
+        section_map = {
+            "hints": "tips",
+            "teleports": "teleports",
+            "news": "news",
+            "changelog": "changelog",
+        }
+        for bind in binds:
+            section = section_map.get(bind.get("help_section"))
+            if not section:
+                continue
+            title = bind.get("title") or bind.get("trigger") or "Бинд"
+            category = bind.get("category") or "Без категории"
+            content = str(bind.get("content", "") or "").strip()
+            preview = content if len(content) <= 160 else f"{content[:157]}..."
+            body = preview or "Без описания"
+            dynamic[section].append(
+                {
+                    "title": title,
+                    "category": category,
+                    "body": body,
+                }
+            )
+        if hasattr(self.help_page, "set_dynamic_items"):
+            self.help_page.set_dynamic_items(dynamic)
 
     def _refresh_settings_hotkeys(self, settings: dict) -> None:
         kb = get_keyboard()
@@ -736,24 +780,25 @@ class MainWindow(QMainWindow):
 
         hotkeys = settings.get("hotkeys", {})
         handlers = {
-            "toggle": self._handle_toggle_hotkey,
-            "open": self._handle_open_hotkey,
-            "profile_switch": self._handle_profile_switch_hotkey,
+            "toggle": (self._handle_toggle_hotkey, "Вкл/выкл binder"),
+            "open": (self._handle_open_hotkey, "Открыть окно"),
+            "profile_switch": (self._handle_profile_switch_hotkey, "Переключить профиль"),
         }
-        for key, handler in handlers.items():
+        errors: list[str] = []
+        for key, (handler, label) in handlers.items():
             combo = normalize_hotkey(str(hotkeys.get(key, "")))
             if not combo:
+                continue
+            if not is_hotkey_valid(combo):
+                errors.append(f"Некорректная комбинация для «{label}»: {combo}. Нажмите «Записать».")
                 continue
             try:
                 handle = kb.add_hotkey(combo, handler)
             except Exception:
-                QMessageBox.warning(
-                    self,
-                    "Хоткей",
-                    f"Не удалось зарегистрировать хоткей для '{key}': {combo}.",
-                )
+                errors.append(f"Не удалось зарегистрировать «{label}»: {combo}. Нажмите «Записать».")
                 continue
             self._settings_hotkey_handles.append(handle)
+        self.settings_page.set_hotkey_errors(errors)
 
     def _handle_toggle_hotkey(self) -> None:
         profile = self.store.get_active_profile()

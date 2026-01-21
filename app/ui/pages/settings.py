@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from PySide6.QtCore import QThread, Signal, Qt
 from PySide6.QtWidgets import (
-    QCheckBox,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -14,11 +13,17 @@ from PySide6.QtWidgets import (
 )
 
 from .common import card_container, card_layout, section_title
-from app.hotkeys import format_hotkey, get_keyboard, keyboard_available, normalize_hotkey
+from app.ui.widgets.switch import ToggleSwitch
+from app.hotkeys import (
+    format_hotkey,
+    get_keyboard,
+    keyboard_available,
+    normalize_hotkey,
+)
 
 
-ROW_H = 44          # высота строки
-FIELD_H = 40        # высота инпута
+ROW_H = 36          # высота строки
+FIELD_H = 32        # высота инпута
 LABEL_W = 270       # ширина лейбла слева
 
 
@@ -65,6 +70,27 @@ def _row(label_text: str, field: QWidget, label_width: int = LABEL_W) -> QWidget
 
     l.addWidget(label, 0, Qt.AlignVCenter)
     l.addWidget(field, 1, Qt.AlignVCenter)
+    return w
+
+
+def _toggle_row(label_text: str, toggle: ToggleSwitch, label_width: int = LABEL_W) -> QWidget:
+    w = QWidget()
+    w.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+    w.setMinimumHeight(ROW_H)
+    w.setMaximumHeight(ROW_H)
+
+    l = QHBoxLayout(w)
+    l.setContentsMargins(0, 0, 0, 0)
+    l.setSpacing(14)
+
+    label = QLabel(label_text)
+    label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+    label.setFixedWidth(label_width)
+    label.setStyleSheet("color:#e8e8e8;font-size:12px;font-weight:600;")
+
+    l.addWidget(label, 0, Qt.AlignVCenter)
+    l.addWidget(toggle, 0, Qt.AlignVCenter)
+    l.addStretch(1)
     return w
 
 
@@ -123,17 +149,15 @@ class SettingsPage(QWidget):
         self.prefixes_input.textChanged.connect(self.emit_change)
         triggers_layout.addWidget(_row("Список префиксов:", self.prefixes_input))
 
-        self.allow_no_prefix = QCheckBox("Разрешить триггер без префикса")
-        self.auto_layout = QCheckBox("Авто-конверсия RU↔EN, если триггер не найден")
-        self.allow_no_prefix.setObjectName("Toggle")
-        self.auto_layout.setObjectName("Toggle")
+        self.allow_no_prefix = ToggleSwitch()
+        self.auto_layout = ToggleSwitch()
 
         # stateChanged(int) -> emit_change(*args) (чтобы не падало)
-        self.allow_no_prefix.stateChanged.connect(self.emit_change)
-        self.auto_layout.stateChanged.connect(self.emit_change)
+        self.allow_no_prefix.toggled.connect(self.emit_change)
+        self.auto_layout.toggled.connect(self.emit_change)
 
-        triggers_layout.addWidget(self.allow_no_prefix)
-        triggers_layout.addWidget(self.auto_layout)
+        triggers_layout.addWidget(_toggle_row("Разрешить триггер без префикса", self.allow_no_prefix))
+        triggers_layout.addWidget(_toggle_row("Авто-конверсия RU↔EN, если триггер не найден", self.auto_layout))
         triggers_layout.addWidget(_hint("Подсказка: триггер хранится без префикса, префиксы задаются здесь."))
 
         # ---------- Commit keys ----------
@@ -150,14 +174,23 @@ class SettingsPage(QWidget):
         commits_row_layout.setContentsMargins(0, 0, 0, 0)
         commits_row_layout.setSpacing(14)
 
-        self.space_cb = QCheckBox("Space")
-        self.enter_cb = QCheckBox("Enter")
-        self.tab_cb = QCheckBox("Tab")
+        self.space_cb = ToggleSwitch()
+        self.enter_cb = ToggleSwitch()
+        self.tab_cb = ToggleSwitch()
 
-        for cb in (self.space_cb, self.enter_cb, self.tab_cb):
-            cb.setObjectName("Toggle")
-            cb.stateChanged.connect(self.emit_change)
-            commits_row_layout.addWidget(cb, 0, Qt.AlignVCenter)
+        for toggle, label in (
+            (self.space_cb, "Space"),
+            (self.enter_cb, "Enter"),
+            (self.tab_cb, "Tab"),
+        ):
+            toggle.toggled.connect(self.emit_change)
+            wrap = QWidget()
+            wrap_l = QHBoxLayout(wrap)
+            wrap_l.setContentsMargins(0, 0, 0, 0)
+            wrap_l.setSpacing(8)
+            wrap_l.addWidget(toggle)
+            wrap_l.addWidget(QLabel(label))
+            commits_row_layout.addWidget(wrap, 0, Qt.AlignVCenter)
 
         commits_row_layout.addStretch(1)
         commits_layout.addWidget(commits_row)
@@ -192,6 +225,11 @@ class SettingsPage(QWidget):
                 self._hotkey_field("profile_switch", self.profile_hotkey),
             )
         )
+        self.hotkeys_error = QLabel()
+        self.hotkeys_error.setStyleSheet("color: #cfa3a3; font-size: 11px;")
+        self.hotkeys_error.setWordWrap(True)
+        self.hotkeys_error.setVisible(False)
+        hotkeys_layout.addWidget(self.hotkeys_error)
 
         # ---------- Apps filter ----------
         filter_card = card_container()
@@ -360,3 +398,10 @@ class SettingsPage(QWidget):
         if isinstance(stored, str) and stored:
             return stored
         return normalize_hotkey(field.text().strip())
+
+    def set_hotkey_errors(self, errors: list[str]) -> None:
+        if errors:
+            self.hotkeys_error.setText(" ".join(errors))
+            self.hotkeys_error.setVisible(True)
+        else:
+            self.hotkeys_error.setVisible(False)

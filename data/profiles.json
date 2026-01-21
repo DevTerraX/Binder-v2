@@ -5,7 +5,7 @@
       "id": "b1073114-7db0-4c18-a2d0-133edbc50183",
       "name": "default",
       "created_at": "2026-01-20T15:42:00.053424+00:00",
-      "updated_at": "2026-01-21T01:09:07.450366+00:00",
+      "updated_at": "2026-01-21T14:39:17.016264+00:00",
       "settings": {
         "trigger_prefixes": [
           ".тотот"
@@ -58,6 +58,34 @@
           "trigger": "tp",
           "type": "Command",
           "content": "/tp {id}"
+        },
+        {
+          "category": "Ответы",
+          "content": "uhuy",
+          "help_section": "hints",
+          "id": "4721c832-b544-4db9-8d5c-44027b9a9aff",
+          "options": {
+            "case_sensitive": false,
+            "delete_trigger": true,
+            "only_prefix": true
+          },
+          "title": "kkj",
+          "trigger": "yuknkjkjkjk",
+          "type": "Text"
+        },
+        {
+          "category": "Телепорты",
+          "content": "уйцуйц",
+          "help_section": "teleports",
+          "id": "eae9d940-a4aa-427a-84ec-27d481632c4b",
+          "options": {
+            "case_sensitive": false,
+            "delete_trigger": true,
+            "only_prefix": true
+          },
+          "title": "уйц",
+          "trigger": "цуй",
+          "type": "Text"
         }
       ]
     }

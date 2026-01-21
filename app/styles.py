@@ -111,15 +111,15 @@ QPushButton#HelpTab:checked {{
 QLineEdit, QTextEdit, QPlainTextEdit, QComboBox {{
     background: #0B0B0C;
     border: 1px solid rgba(255, 255, 255, 10);
-    border-radius: 20px;
-    padding: 8px 12px;
+    border-radius: 12px;
+    padding: 6px 10px;
     color: #e6e6e6;
 }}
 QLineEdit::placeholder, QTextEdit::placeholder, QPlainTextEdit::placeholder {{
     color: rgba(230, 230, 230, 120);
 }}
 QLineEdit, QComboBox {{
-    min-height: 36px;
+    min-height: 32px;
 }}
 QComboBox::drop-down {{
     border: none;
@@ -184,18 +184,26 @@ QFrame#Card QWidget {{
 }}
 
 QFrame#Card QLineEdit,
-QFrame#Card QComboBox,
-QFrame#Card QPlainTextEdit,
-QFrame#Card QTextEdit {{
+QFrame#Card QComboBox {{
     background: #0B0B0C;
     border: 1px solid rgba(255, 255, 255, 10);
     color: #e6e6e6;
 
     /* вот это делает тонко и красиво */
-    border-radius: 12px;
-    padding: 6px 10px;
-    min-height: 34px;
-    max-height: 34px;
+    border-radius: 10px;
+    padding: 5px 10px;
+    min-height: 32px;
+    max-height: 32px;
+    font-size: 13px;
+}}
+
+QFrame#Card QPlainTextEdit,
+QFrame#Card QTextEdit {{
+    background: #0B0B0C;
+    border: 1px solid rgba(255, 255, 255, 10);
+    color: #e6e6e6;
+    border-radius: 10px;
+    padding: 8px 10px;
     font-size: 13px;
 }}
 

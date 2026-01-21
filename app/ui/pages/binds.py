@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtWidgets import (
-    QCheckBox,
     QComboBox,
     QFrame,
     QHBoxLayout,
@@ -17,6 +16,7 @@ from PySide6.QtWidgets import (
 )
 
 from .common import badge, card_container, card_layout, section_title
+from app.ui.widgets.switch import ToggleSwitch
 
 
 class BindsPage(QWidget):
@@ -46,14 +46,20 @@ class BindsPage(QWidget):
         self.category = QComboBox()
         self.category.addItems(["Все категории"])
         self.reset_btn = QPushButton("Сброс фильтров")
-        self.toggle = QCheckBox("Binder ON")
-        self.toggle.setObjectName("Toggle")
+        toggle_wrap = QWidget()
+        toggle_layout = QHBoxLayout(toggle_wrap)
+        toggle_layout.setContentsMargins(0, 0, 0, 0)
+        toggle_layout.setSpacing(8)
+        self.toggle = ToggleSwitch()
         self.toggle.setChecked(True)
-        self.toggle.stateChanged.connect(lambda: self.binder_toggled.emit(self.toggle.isChecked()))
+        toggle_label = QLabel("Binder ON")
+        self.toggle.toggled.connect(lambda checked: self.binder_toggled.emit(checked))
         top_layout.addWidget(self.search, 1)
         top_layout.addWidget(self.category)
         top_layout.addWidget(self.reset_btn)
-        top_layout.addWidget(self.toggle)
+        toggle_layout.addWidget(self.toggle)
+        toggle_layout.addWidget(toggle_label)
+        top_layout.addWidget(toggle_wrap)
 
         layout.addWidget(top_bar)
 

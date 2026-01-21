@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import sys
 from typing import Iterable
 
@@ -38,6 +39,24 @@ def get_keyboard():
 def normalize_hotkey(value: str) -> str:
     parts = [p.strip().lower() for p in value.split("+") if p.strip()]
     return "+".join(parts)
+
+
+def is_hotkey_valid(value: str) -> bool:
+    normalized = normalize_hotkey(value)
+    if not normalized:
+        return False
+    try:
+        normalized.encode("ascii")
+    except UnicodeEncodeError:
+        return False
+    kb = get_keyboard()
+    if kb is not None and hasattr(kb, "parse_hotkey"):
+        try:
+            kb.parse_hotkey(normalized)
+            return True
+        except Exception:
+            return False
+    return bool(re.match(r"^[a-z0-9+\-]+$", normalized))
 
 
 def format_hotkey(value: str) -> str:
