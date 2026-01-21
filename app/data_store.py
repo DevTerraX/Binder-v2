@@ -46,6 +46,7 @@ class DataStore:
                         "discord_ga": "admin#1234",
                         "me_name": "AdminName",
                     },
+                    "hotkeys": [],
                     "binds": [
                         {
                             "id": str(uuid4()),
@@ -179,6 +180,9 @@ class DataStore:
         profile["binds"] = [
             {**bind, "id": str(uuid4())} for bind in profile.get("binds", [])
         ]
+        profile["hotkeys"] = [
+            {**hotkey, "id": str(uuid4())} for hotkey in profile.get("hotkeys", [])
+        ]
         self.data.setdefault("profiles", []).append(profile)
         self._save()
         return deepcopy(profile)
@@ -230,3 +234,46 @@ class DataStore:
                 continue
             triggers.add(item.get("trigger", ""))
         return triggers
+
+    def list_hotkeys(self, profile_id: str | None = None) -> list[dict]:
+        profile = self.get_profile(profile_id)
+        return deepcopy(profile.get("hotkeys", []))
+
+    def get_hotkey(self, hotkey_id: str, profile_id: str | None = None) -> dict | None:
+        profile = self.get_profile(profile_id)
+        for hotkey in profile.get("hotkeys", []):
+            if hotkey.get("id") == hotkey_id:
+                return deepcopy(hotkey)
+        return None
+
+    def add_hotkey(self, hotkey: dict, profile_id: str | None = None) -> dict:
+        profile = self.get_profile(profile_id)
+        new_hotkey = deepcopy(hotkey)
+        new_hotkey["id"] = str(uuid4())
+        profile.setdefault("hotkeys", []).append(new_hotkey)
+        profile["updated_at"] = datetime.now(timezone.utc).isoformat()
+        self._save()
+        return deepcopy(new_hotkey)
+
+    def update_hotkey(self, hotkey_id: str, hotkey: dict, profile_id: str | None = None) -> dict | None:
+        profile = self.get_profile(profile_id)
+        for idx, item in enumerate(profile.get("hotkeys", [])):
+            if item.get("id") == hotkey_id:
+                updated = deepcopy(hotkey)
+                updated["id"] = hotkey_id
+                profile["hotkeys"][idx] = updated
+                profile["updated_at"] = datetime.now(timezone.utc).isoformat()
+                self._save()
+                return deepcopy(updated)
+        return None
+
+    def delete_hotkey(self, hotkey_id: str, profile_id: str | None = None) -> bool:
+        profile = self.get_profile(profile_id)
+        hotkeys = profile.get("hotkeys", [])
+        for idx, item in enumerate(hotkeys):
+            if item.get("id") == hotkey_id:
+                hotkeys.pop(idx)
+                profile["updated_at"] = datetime.now(timezone.utc).isoformat()
+                self._save()
+                return True
+        return False

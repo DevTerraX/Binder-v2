@@ -30,6 +30,7 @@ class BindsPage(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.prefix = "."
+        self._binds: list[dict] = []
         layout = QVBoxLayout(self)
         layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(16)
@@ -40,19 +41,26 @@ class BindsPage(QWidget):
         top_layout = QHBoxLayout(top_bar)
         top_layout.setContentsMargins(0, 0, 0, 0)
         top_layout.setSpacing(10)
-        search = QLineEdit()
-        search.setPlaceholderText("Поиск по trigger / названию / тексту")
-        category = QComboBox()
-        category.addItems(["Все категории", "Телепорты", "Ответы", "Наказания"])
+        self.search = QLineEdit()
+        self.search.setPlaceholderText("Поиск по trigger / названию / тексту")
+        self.category = QComboBox()
+        self.category.addItems(["Все категории"])
+        self.reset_btn = QPushButton("Сброс фильтров")
         self.toggle = QCheckBox("Binder ON")
         self.toggle.setObjectName("Toggle")
         self.toggle.setChecked(True)
         self.toggle.stateChanged.connect(lambda: self.binder_toggled.emit(self.toggle.isChecked()))
-        top_layout.addWidget(search, 1)
-        top_layout.addWidget(category)
+        top_layout.addWidget(self.search, 1)
+        top_layout.addWidget(self.category)
+        top_layout.addWidget(self.reset_btn)
         top_layout.addWidget(self.toggle)
 
         layout.addWidget(top_bar)
+
+        self.platform_hint = QLabel("Доступно только на Windows")
+        self.platform_hint.setStyleSheet("color: #a89d9d; font-size: 12px;")
+        self.platform_hint.setVisible(False)
+        layout.addWidget(self.platform_hint)
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -82,14 +90,38 @@ class BindsPage(QWidget):
 
         layout.addWidget(action_row)
 
+        self.search.textChanged.connect(self.refresh)
+        self.category.currentIndexChanged.connect(self.refresh)
+        self.reset_btn.clicked.connect(self.reset_filters)
+
     def set_binds(self, binds: list[dict]) -> None:
+        self._binds = binds
+        self._update_categories(binds)
+        self.refresh()
+
+    def refresh(self) -> None:
         while self.container_layout.count():
             item = self.container_layout.takeAt(0)
             widget = item.widget()
             if widget:
                 widget.deleteLater()
 
-        for bind in binds:
+        query = self.search.text().strip().lower()
+        category = self.category.currentText()
+
+        for bind in self._binds:
+            if category != "Все категории" and bind.get("category", "") != category:
+                continue
+            if query:
+                haystack = " ".join(
+                    [
+                        str(bind.get("trigger", "")),
+                        str(bind.get("title", "")),
+                        str(bind.get("content", "")),
+                    ]
+                ).lower()
+                if query not in haystack:
+                    continue
             card = self._bind_card(
                 self.prefix,
                 bind.get("trigger", ""),
@@ -102,6 +134,23 @@ class BindsPage(QWidget):
             self.container_layout.addWidget(card)
         self.container_layout.addStretch(1)
 
+    def reset_filters(self) -> None:
+        self.search.clear()
+        self.category.setCurrentIndex(0)
+
+    def _update_categories(self, binds: list[dict]) -> None:
+        current = self.category.currentText() if self.category.count() else "Все категории"
+        categories = sorted({b.get("category", "Без категории") for b in binds})
+        self.category.blockSignals(True)
+        self.category.clear()
+        self.category.addItem("Все категории")
+        for item in categories:
+            if item:
+                self.category.addItem(item)
+        index = self.category.findText(current)
+        self.category.setCurrentIndex(index if index != -1 else 0)
+        self.category.blockSignals(False)
+
     def set_binder_enabled(self, enabled: bool) -> None:
         self.toggle.blockSignals(True)
         self.toggle.setChecked(enabled)
@@ -109,6 +158,10 @@ class BindsPage(QWidget):
 
     def set_prefix(self, prefix: str) -> None:
         self.prefix = prefix or "."
+
+    def set_engine_available(self, available: bool) -> None:
+        self.toggle.setEnabled(available)
+        self.platform_hint.setVisible(not available)
 
     def _bind_card(
         self,
@@ -182,7 +235,7 @@ class BindsPage(QWidget):
         actions = QWidget()
         actions_layout = QHBoxLayout(actions)
         actions_layout.setContentsMargins(0, 0, 8, 0)
-        actions_layout.setSpacing(14)
+        actions_layout.setSpacing(20)
 
         edit_btn = QToolButton()
         edit_btn.setObjectName("ActionIcon")

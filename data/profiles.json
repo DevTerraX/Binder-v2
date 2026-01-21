@@ -5,20 +5,34 @@
       "id": "b1073114-7db0-4c18-a2d0-133edbc50183",
       "name": "default",
       "created_at": "2026-01-20T15:42:00.053424+00:00",
-      "updated_at": "2026-01-20T15:42:00.053424+00:00",
+      "updated_at": "2026-01-21T01:09:07.450366+00:00",
       "settings": {
         "trigger_prefixes": [
-          "."
+          ".тотот"
         ],
         "commit_keys": [
-          "space"
-        ]
+          "space",
+          "enter"
+        ],
+        "allow_no_prefix": false,
+        "apps_filter": {
+          "exclude": "",
+          "only": ""
+        },
+        "auto_layout": true,
+        "hotkeys": {
+          "open": "рпнпнпн",
+          "profile_switch": "",
+          "toggle": ""
+        },
+        "binder_enabled": true
       },
       "variables": {
-        "gender": "male",
+        "discord_ga": "",
         "discord_me": "me#9999",
         "discord_zga": "zga#5678",
-        "discord_ga": "admin#1234"
+        "gender": "male",
+        "me_name": ""
       },
       "binds": [
         {

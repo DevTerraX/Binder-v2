@@ -6,19 +6,111 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
-    QFormLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
-    QMessageBox,
 )
 
 from app.ui.pages.common import card_container, card_layout
 
+
+# ----------------------------
+# Helpers
+# ----------------------------
+
+def _apply_editor_local_style(dialog: QDialog) -> None:
+    """
+    Локальный стиль только для этого диалога.
+    Он специально "перебивает" возможные глобальные правила типа:
+      QFrame#Card QWidget { background: transparent; }
+    чтобы инпуты/комбобоксы в карточках не пропадали.
+    """
+    dialog.setStyleSheet(
+        """
+        /* Точечно для этого диалога */
+        QWidget#BindEditorDialogRoot {
+            background: transparent;
+        }
+
+        /* Инпуты внутри карточек - всегда видимые */
+        QFrame#Card QLineEdit,
+        QFrame#Card QComboBox,
+        QFrame#Card QPlainTextEdit {
+            background: #0E0E10;
+            border: 1px solid rgba(255, 255, 255, 18);
+            border-radius: 14px;
+            padding: 8px 12px;
+            color: #eaeaea;
+            selection-background-color: rgba(160, 26, 26, 90);
+        }
+
+        QFrame#Card QLineEdit:focus,
+        QFrame#Card QComboBox:focus,
+        QFrame#Card QPlainTextEdit:focus {
+            border: 1px solid rgba(160, 26, 26, 140);
+        }
+
+        QFrame#Card QLineEdit::placeholder,
+        QFrame#Card QPlainTextEdit::placeholder {
+            color: rgba(230, 230, 230, 110);
+        }
+
+        /* Segmented buttons */
+        QPushButton#SegBtn {
+            background: #0E0E10;
+            border: 1px solid rgba(255, 255, 255, 16);
+            border-radius: 12px;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        QPushButton#SegBtn:hover {
+            border: 1px solid rgba(255, 255, 255, 26);
+            background: #111114;
+        }
+        QPushButton#SegBtn:checked {
+            background: rgba(160, 26, 26, 22);
+            border: 1px solid rgba(160, 26, 26, 90);
+            color: #ffffff;
+        }
+
+        /* Маленькие подписи */
+        QLabel#FieldLabel {
+            color: #e8e8e8;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        QLabel#HintText {
+            color: #a7a7a7;
+            font-size: 11px;
+        }
+        """
+    )
+
+
+def _field_row(label_text: str, field: QWidget) -> QWidget:
+    row = QWidget()
+    lay = QVBoxLayout(row)
+    lay.setContentsMargins(0, 0, 0, 0)
+    lay.setSpacing(6)
+
+    label = QLabel(label_text)
+    label.setObjectName("FieldLabel")
+    label.setMinimumHeight(18)
+
+    lay.addWidget(label)
+    lay.addWidget(field)
+    return row
+
+
+# ----------------------------
+# Dialog
+# ----------------------------
 
 class BindEditorDialog(QDialog):
     saved = Signal(dict)
@@ -32,226 +124,306 @@ class BindEditorDialog(QDialog):
         bind_data: dict | None = None,
     ) -> None:
         super().__init__(parent)
+
         self.setWindowTitle("Редактор бинда")
         self.setMinimumSize(920, 640)
         self.setModal(True)
+
         self.mode = mode
         self.existing_triggers = existing_triggers or set()
         self.bind_data = bind_data or {}
+
         self.bind_id = self.bind_data.get("id", "")
         self.original_trigger = self.bind_data.get("trigger", "")
 
+        # Корневой контейнер диалога (на него повесим локальные стили)
         dialog_root = QWidget()
-        dialog_root.setObjectName("DialogRoot")
-        root = QVBoxLayout(self)
-        root.setContentsMargins(16, 16, 16, 16)
-        root.setSpacing(16)
-        root.addWidget(dialog_root, 1)
+        dialog_root.setObjectName("BindEditorDialogRoot")
 
-        dialog_layout = QVBoxLayout(dialog_root)
-        dialog_layout.setContentsMargins(24, 24, 24, 24)
-        dialog_layout.setSpacing(16)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(16, 16, 16, 16)
+        outer.setSpacing(12)
+        outer.addWidget(dialog_root, 1)
 
+        _apply_editor_local_style(self)
+
+        # Внутренний layout
+        root = QVBoxLayout(dialog_root)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(12)
+
+        # Header
         header = QWidget()
-        header_layout = QVBoxLayout(header)
-        header_layout.setContentsMargins(0, 0, 0, 0)
-        header_layout.setSpacing(6)
-        title_label = QLabel("Редактор бинда")
-        title_label.setStyleSheet("color: #ffffff; font-size: 18px; font-weight: 700;")
-        subtitle_label = QLabel("Создание и настройка триггеров для быстрого ввода.")
-        subtitle_label.setStyleSheet("color: #bfb0b0;")
-        header_layout.addWidget(title_label)
-        header_layout.addWidget(subtitle_label)
+        header_l = QVBoxLayout(header)
+        header_l.setContentsMargins(8, 8, 8, 0)
+        header_l.setSpacing(6)
 
-        content_row = QWidget()
-        content_layout = QHBoxLayout(content_row)
-        content_layout.setContentsMargins(0, 0, 0, 0)
-        content_layout.setSpacing(16)
+        title = QLabel("Редактор бинда")
+        title.setStyleSheet("color:#ffffff;font-size:18px;font-weight:700;")
+        subtitle = QLabel("Создание и настройка триггеров для быстрого ввода.")
+        subtitle.setStyleSheet("color:#bfb0b0;")
 
-        left = QWidget()
-        left_layout = QVBoxLayout(left)
-        left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.setSpacing(12)
+        header_l.addWidget(title)
+        header_l.addWidget(subtitle)
 
+        root.addWidget(header)
+
+        # Content area with scroll (чтобы ничего не ломалось на маленьких экранах)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QScrollArea.NoFrame)
+
+        content_wrap = QWidget()
+        scroll.setWidget(content_wrap)
+
+        content_l = QHBoxLayout(content_wrap)
+        content_l.setContentsMargins(0, 0, 0, 0)
+        content_l.setSpacing(14)
+
+        # LEFT CARD
         left_card = card_container()
-        left_layout = card_layout(left_card, spacing=12)
+        left_card.setMinimumWidth(520)  # чтобы форма не сжималась
+        left = card_layout(left_card, spacing=12)
 
-        title = QLabel("Основные поля")
-        title.setStyleSheet("color: #ffffff; font-size: 15px; font-weight: 600;")
+        left_title = QLabel("Основные поля")
+        left_title.setStyleSheet("color:#ffffff;font-size:15px;font-weight:600;")
 
-        form = QFormLayout()
-        form.setLabelAlignment(Qt.AlignLeft)
+        # Inputs
         self.name_input = QLineEdit()
+        self.name_input.setMinimumHeight(40)
+        self.name_input.setPlaceholderText("Например: Приветствие")
+
         self.category_input = QComboBox()
+        self.category_input.setMinimumHeight(40)
         self.category_input.addItems(["Ответы", "Телепорты", "Наказания", "Без категории"])
+
         self.trigger_input = QLineEdit()
+        self.trigger_input.setMinimumHeight(40)
         self.trigger_input.setPlaceholderText("ку")
 
+        # Hints
         trigger_hint = QLabel("Префикс берется из настроек. Триггер хранится без префикса.")
-        trigger_hint.setStyleSheet("color: #a7a7a7;")
-        layout_hint = QLabel("Можно писать триггер на русском — авто-конверсия найдёт соответствие.")
-        layout_hint.setStyleSheet("color: #a7a7a7;")
+        trigger_hint.setObjectName("HintText")
+        trigger_hint.setWordWrap(True)
 
-        form.addRow("Название:", self.name_input)
-        form.addRow("Категория:", self.category_input)
-        form.addRow("Триггер:", self.trigger_input)
+        layout_hint = QLabel("Можно писать триггер на русском — авто-конверсия найдёт соответствие.")
+        layout_hint.setObjectName("HintText")
+        layout_hint.setWordWrap(True)
+
+        # Form block
+        form_block = QWidget()
+        form_l = QVBoxLayout(form_block)
+        form_l.setContentsMargins(0, 2, 0, 0)
+        form_l.setSpacing(10)
+
+        form_l.addWidget(_field_row("Название", self.name_input))
+        form_l.addWidget(_field_row("Категория", self.category_input))
+        form_l.addWidget(_field_row("Триггер", self.trigger_input))
+
+        # Type segmented buttons
+        type_label = QLabel("Тип")
+        type_label.setObjectName("FieldLabel")
 
         type_row = QWidget()
-        type_layout = QHBoxLayout(type_row)
-        type_layout.setContentsMargins(0, 0, 0, 0)
-        type_layout.setSpacing(8)
+        type_l = QHBoxLayout(type_row)
+        type_l.setContentsMargins(0, 0, 0, 0)
+        type_l.setSpacing(8)
 
-        self.type_group = QButtonGroup(type_row)
+        self.type_group = QButtonGroup(self)
+        self.type_group.setExclusive(True)
+
         self.type_text = QPushButton("Text")
         self.type_command = QPushButton("Command")
         self.type_multi = QPushButton("Multi")
-        for btn in (self.type_text, self.type_command, self.type_multi):
-            btn.setCheckable(True)
-            self.type_group.addButton(btn)
-            type_layout.addWidget(btn)
+
+        for b in (self.type_text, self.type_command, self.type_multi):
+            b.setCheckable(True)
+            b.setObjectName("SegBtn")
+            b.setMinimumHeight(38)
+            b.setMinimumWidth(120)
+            self.type_group.addButton(b)
+            type_l.addWidget(b)
+
+        type_l.addStretch(1)
         self.type_text.setChecked(True)
+        self.type_group.buttonClicked.connect(self._on_type_changed)
+
+        # Content
+        content_label = QLabel("Контент")
+        content_label.setObjectName("FieldLabel")
 
         self.content_input = QPlainTextEdit()
-        self.content_input.setPlaceholderText("Введите текст или команды. Для Multi каждая строка = отдельная команда.")
+        self.content_input.setMinimumHeight(220)
+        self.content_input.setPlaceholderText(
+            "Введите текст или команды. Для Multi каждая строка = отдельная команда."
+        )
 
+        # Options
         options_title = QLabel("Опции")
-        options_title.setStyleSheet("color: #ffffff; font-size: 14px;")
+        options_title.setStyleSheet("color:#ffffff;font-size:14px;font-weight:600;")
 
         self.delete_trigger = QCheckBox("Удалять введенный триггер")
         self.delete_trigger.setObjectName("Toggle")
         self.delete_trigger.setChecked(True)
+
         self.case_sensitive = QCheckBox("Чувствителен к регистру")
         self.case_sensitive.setObjectName("Toggle")
+
         self.only_prefix = QCheckBox("Только с префиксом")
         self.only_prefix.setObjectName("Toggle")
         self.only_prefix.setChecked(True)
 
-        left_layout.addWidget(title)
-        left_layout.addLayout(form)
-        left_layout.addWidget(trigger_hint)
-        left_layout.addWidget(layout_hint)
-        left_layout.addWidget(QLabel("Тип:"))
-        left_layout.addWidget(type_row)
-        left_layout.addWidget(QLabel("Контент:"))
-        left_layout.addWidget(self.content_input, 1)
-        left_layout.addWidget(options_title)
-        left_layout.addWidget(self.delete_trigger)
-        left_layout.addWidget(self.case_sensitive)
-        left_layout.addWidget(self.only_prefix)
+        left.addWidget(left_title)
+        left.addWidget(form_block)
+        left.addWidget(trigger_hint)
+        left.addWidget(layout_hint)
+        left.addSpacing(6)
+        left.addWidget(type_label)
+        left.addWidget(type_row)
+        left.addSpacing(6)
+        left.addWidget(content_label)
+        left.addWidget(self.content_input, 1)
+        left.addWidget(options_title)
+        left.addWidget(self.delete_trigger)
+        left.addWidget(self.case_sensitive)
+        left.addWidget(self.only_prefix)
 
-        right = QWidget()
-        right_layout = QVBoxLayout(right)
-        right_layout.setContentsMargins(0, 0, 0, 0)
-        right_layout.setSpacing(12)
+        # RIGHT COLUMN
+        right_col = QWidget()
+        right_l = QVBoxLayout(right_col)
+        right_l.setContentsMargins(0, 0, 0, 0)
+        right_l.setSpacing(12)
+        right_col.setMinimumWidth(330)
 
+        # Templates card
         templates_card = card_container()
-        templates_layout = card_layout(templates_card, spacing=10)
+        templates = card_layout(templates_card, spacing=10)
+
         templates_title = QLabel("Шаблоны")
-        templates_title.setStyleSheet("color: #ffffff; font-size: 15px; font-weight: 600;")
+        templates_title.setStyleSheet("color:#ffffff;font-size:15px;font-weight:600;")
 
-        template_row = QWidget()
-        template_layout = QHBoxLayout(template_row)
-        template_layout.setContentsMargins(0, 0, 0, 0)
-        template_layout.setSpacing(8)
-
-        for text in ("{discord_me}", "{discord_zga}", "{discord_ga}"):
-            btn = QPushButton(text)
-            btn.clicked.connect(lambda checked, t=text: self.insert_template(t))
-            template_layout.addWidget(btn)
-
-        template_row_2 = QWidget()
-        template_layout_2 = QHBoxLayout(template_row_2)
-        template_layout_2.setContentsMargins(0, 0, 0, 0)
-        template_layout_2.setSpacing(8)
-        for text in ("{me_name}", "{time}", "{date}"):
-            btn = QPushButton(text)
-            btn.clicked.connect(lambda checked, t=text: self.insert_template(t))
-            template_layout_2.addWidget(btn)
-
-        gender_row = QWidget()
-        gender_layout = QHBoxLayout(gender_row)
-        gender_layout.setContentsMargins(0, 0, 0, 0)
-        gender_layout.setSpacing(8)
-        gender_templates = [
-            "{g:мог|могла}",
-            "{g:сделал|сделала}",
-            "{g:обратился|обратилась}",
-        ]
-        for text in gender_templates:
-            btn = QPushButton(text)
-            btn.clicked.connect(lambda checked, t=text: self.insert_template(t))
-            gender_layout.addWidget(btn)
+        templates.addWidget(templates_title)
+        templates.addWidget(self._templates_row(["{discord_me}", "{discord_zga}", "{discord_ga}"]))
+        templates.addWidget(self._templates_row(["{me_name}", "{time}", "{date}"]))
+        templates.addWidget(self._templates_row(["{g:мог|могла}", "{g:сделал|сделала}", "{g:обратился|обратилась}"]))
 
         gender_hint = QLabel("{g:муж|жен} выбирается по полу из персонализации.")
-        gender_hint.setStyleSheet("color: #a7a7a7;")
+        gender_hint.setObjectName("HintText")
+        gender_hint.setWordWrap(True)
+        templates.addWidget(gender_hint)
 
+        # Test card
         test_card = card_container()
-        test_layout_wrap = card_layout(test_card, spacing=10)
+        test = card_layout(test_card, spacing=10)
+
         test_title = QLabel("Тест")
-        test_title.setStyleSheet("color: #ffffff; font-size: 15px; font-weight: 600;")
+        test_title.setStyleSheet("color:#ffffff;font-size:15px;font-weight:600;")
 
         self.test_input = QLineEdit()
+        self.test_input.setMinimumHeight(38)
         self.test_input.setPlaceholderText(".ку")
-        test_button = QPushButton("Проверить")
-        test_button.setObjectName("Primary")
-        test_button.clicked.connect(self.run_test)
+
+        test_btn = QPushButton("Проверить")
+        test_btn.setObjectName("Primary")
+        test_btn.setMinimumHeight(38)
+        test_btn.clicked.connect(self.run_test)
 
         test_row = QWidget()
-        test_layout = QHBoxLayout(test_row)
-        test_layout.setContentsMargins(0, 0, 0, 0)
-        test_layout.setSpacing(8)
-        test_layout.addWidget(self.test_input, 1)
-        test_layout.addWidget(test_button)
+        test_row_l = QHBoxLayout(test_row)
+        test_row_l.setContentsMargins(0, 0, 0, 0)
+        test_row_l.setSpacing(8)
+        test_row_l.addWidget(self.test_input, 1)
+        test_row_l.addWidget(test_btn)
 
         result_label = QLabel("Результат")
-        result_label.setStyleSheet("color: #ffffff; font-size: 14px;")
+        result_label.setStyleSheet("color:#ffffff;font-size:14px;font-weight:600;")
+
         self.result_box = QPlainTextEdit()
         self.result_box.setReadOnly(True)
-        self.result_box.setPlaceholderText(
-            "Найдено: нет\nМетод: точный\nВыходной текст: ..."
-        )
+        self.result_box.setMinimumHeight(160)
+        self.result_box.setPlaceholderText("Найдено: нет\nМетод: точный\nВыходной текст: ...")
 
-        templates_layout.addWidget(templates_title)
-        templates_layout.addWidget(template_row)
-        templates_layout.addWidget(template_row_2)
-        templates_layout.addWidget(gender_row)
-        templates_layout.addWidget(gender_hint)
+        test.addWidget(test_title)
+        test.addWidget(test_row)
+        test.addWidget(result_label)
+        test.addWidget(self.result_box, 1)
 
-        test_layout_wrap.addWidget(test_title)
-        test_layout_wrap.addWidget(test_row)
-        test_layout_wrap.addWidget(result_label)
-        test_layout_wrap.addWidget(self.result_box, 1)
+        right_l.addWidget(templates_card)
+        right_l.addWidget(test_card, 1)
 
-        right_layout.addWidget(templates_card)
-        right_layout.addWidget(test_card, 1)
+        # Put columns in content layout
+        content_l.addWidget(left_card, 3)
+        content_l.addWidget(right_col, 2)
 
+        root.addWidget(scroll, 1)
+
+        # Bottom buttons
         buttons_row = QWidget()
-        buttons_layout = QHBoxLayout(buttons_row)
-        buttons_layout.setContentsMargins(0, 0, 0, 0)
-        buttons_layout.setSpacing(10)
-        save_btn = QPushButton("Сохранить")
-        save_btn.setObjectName("Primary")
-        save_btn.clicked.connect(self.handle_save)
-        cancel_btn = QPushButton("Отмена")
-        cancel_btn.setObjectName("Secondary")
-        cancel_btn.clicked.connect(self.reject)
+        btn_l = QHBoxLayout(buttons_row)
+        btn_l.setContentsMargins(0, 0, 0, 0)
+        btn_l.setSpacing(10)
+
         delete_btn = QPushButton("Удалить")
         delete_btn.setObjectName("Destructive")
+        delete_btn.setMinimumHeight(40)
         delete_btn.clicked.connect(self.handle_delete)
+
+        cancel_btn = QPushButton("Отмена")
+        cancel_btn.setObjectName("Secondary")
+        cancel_btn.setMinimumHeight(40)
+        cancel_btn.clicked.connect(self.reject)
+
+        save_btn = QPushButton("Сохранить")
+        save_btn.setObjectName("Primary")
+        save_btn.setMinimumHeight(40)
+        save_btn.clicked.connect(self.handle_save)
+
         if self.mode == "edit":
-            buttons_layout.addWidget(delete_btn)
-        buttons_layout.addStretch(1)
-        buttons_layout.addWidget(cancel_btn)
-        buttons_layout.addWidget(save_btn)
+            btn_l.addWidget(delete_btn)
 
-        content_layout.addWidget(left_card, 3)
-        content_layout.addWidget(right, 2)
+        btn_l.addStretch(1)
+        btn_l.addWidget(cancel_btn)
+        btn_l.addWidget(save_btn)
 
-        dialog_layout.addWidget(header)
-        dialog_layout.addWidget(content_row, 1)
-        dialog_layout.addWidget(buttons_row)
+        root.addWidget(buttons_row)
 
+        # Load existing bind
         self._load_bind()
+        self._on_type_changed()  # подстроить подсказку сразу
+
+    # ----------------------------
+    # UI blocks
+    # ----------------------------
+
+    def _templates_row(self, texts: list[str]) -> QWidget:
+        row = QWidget()
+        lay = QHBoxLayout(row)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(8)
+        for t in texts:
+            b = QPushButton(t)
+            b.setMinimumHeight(34)
+            b.clicked.connect(lambda checked=False, text=t: self.insert_template(text))
+            lay.addWidget(b)
+        return row
+
+    def _on_type_changed(self) -> None:
+        t = self._current_type()
+        if t == "Multi":
+            self.content_input.setPlaceholderText(
+                "Multi: каждая строка = отдельная команда/строка.\n"
+                "Пример:\n"
+                "/re Привет\n"
+                "/me сделал что-то"
+            )
+        elif t == "Command":
+            self.content_input.setPlaceholderText("Command: одна команда или несколько команд одной строкой.")
+        else:
+            self.content_input.setPlaceholderText("Text: обычный текст, который будет вставлен/введён.")
+
+    # ----------------------------
+    # Actions
+    # ----------------------------
 
     def insert_template(self, text: str) -> None:
         cursor = self.content_input.textCursor()
@@ -263,6 +435,13 @@ class BindEditorDialog(QDialog):
         if not trigger:
             QMessageBox.warning(self, "Ошибка", "Триггер не может быть пустым.")
             return
+
+        # Нормализуем category
+        if not self.category_input.currentText().strip():
+            self.category_input.setCurrentText("Без категории")
+
+        # Конфликт триггера
+        replace = False
         if trigger in self.existing_triggers and trigger != self.original_trigger:
             result = QMessageBox.question(
                 self,
@@ -273,10 +452,6 @@ class BindEditorDialog(QDialog):
             if result != QMessageBox.Yes:
                 return
             replace = True
-        else:
-            replace = False
-        if not self.category_input.currentText().strip():
-            self.category_input.setCurrentText("Без категории")
 
         payload = {
             "id": self.bind_id,
@@ -313,20 +488,21 @@ class BindEditorDialog(QDialog):
     def run_test(self) -> None:
         raw = self.test_input.text().strip()
         if not raw:
-            self.result_box.setPlainText("Найдено: нет\nМетод: точный\nВыходной текст: ")
+            self.result_box.setPlainText("Найдено: нет\nМетод: -\nВыходной текст: ")
             return
-        if raw.startswith("."):
-            raw_trigger = raw[1:]
-        else:
-            raw_trigger = raw
+
+        raw_trigger = raw[1:] if raw.startswith(".") else raw
         current_trigger = self.trigger_input.text().strip()
+
         method = "точный"
         found = raw_trigger == current_trigger
+
         if not found:
             converted = convert_layout(raw_trigger)
             if converted == current_trigger:
                 found = True
                 method = "конверсия RU↔EN"
+
         output = self.content_input.toPlainText().strip() if found else ""
         self.result_box.setPlainText(
             f"Найдено: {'да' if found else 'нет'}\n"
@@ -334,16 +510,24 @@ class BindEditorDialog(QDialog):
             f"Выходной текст: {output}"
         )
 
+    # ----------------------------
+    # Data
+    # ----------------------------
+
     def _load_bind(self) -> None:
         if not self.bind_data:
             return
+
         self.name_input.setText(self.bind_data.get("title", ""))
+
         category = self.bind_data.get("category", "Без категории")
         if category and self.category_input.findText(category) == -1:
             self.category_input.addItem(category)
         self.category_input.setCurrentText(category)
+
         self.trigger_input.setText(self.bind_data.get("trigger", ""))
         self.content_input.setPlainText(self.bind_data.get("content", ""))
+
         bind_type = self.bind_data.get("type", "Text")
         if bind_type == "Command":
             self.type_command.setChecked(True)
@@ -353,10 +537,9 @@ class BindEditorDialog(QDialog):
             self.type_text.setChecked(True)
 
         options = self.bind_data.get("options", {})
-        if options:
-            self.delete_trigger.setChecked(options.get("delete_trigger", True))
-            self.case_sensitive.setChecked(options.get("case_sensitive", False))
-            self.only_prefix.setChecked(options.get("only_prefix", True))
+        self.delete_trigger.setChecked(options.get("delete_trigger", True))
+        self.case_sensitive.setChecked(options.get("case_sensitive", False))
+        self.only_prefix.setChecked(options.get("only_prefix", True))
 
     def _current_type(self) -> str:
         if self.type_command.isChecked():
@@ -366,43 +549,27 @@ class BindEditorDialog(QDialog):
         return "Text"
 
 
+# ----------------------------
+# Layout convert
+# ----------------------------
+
 def convert_layout(text: str) -> str:
     mapping = {
-        "ф": "a",
-        "и": "b",
-        "с": "c",
-        "в": "d",
-        "у": "e",
-        "а": "f",
-        "п": "g",
-        "р": "h",
-        "ш": "i",
-        "о": "j",
-        "л": "k",
-        "д": "l",
-        "ь": "m",
-        "т": "n",
-        "щ": "o",
-        "з": "p",
-        "й": "q",
-        "к": "r",
-        "ы": "s",
-        "е": "t",
-        "г": "u",
-        "м": "v",
-        "ц": "w",
-        "ч": "x",
-        "н": "y",
-        "я": "z",
+        "ф": "a", "и": "b", "с": "c", "в": "d", "у": "e", "а": "f",
+        "п": "g", "р": "h", "ш": "i", "о": "j", "л": "k", "д": "l",
+        "ь": "m", "т": "n", "щ": "o", "з": "p", "й": "q", "к": "r",
+        "ы": "s", "е": "t", "г": "u", "м": "v", "ц": "w", "ч": "x",
+        "н": "y", "я": "z",
     }
     reverse = {v: k for k, v in mapping.items()}
-    converted = []
+
+    out: list[str] = []
     for ch in text:
         lower = ch.lower()
         if lower in mapping:
-            converted.append(mapping[lower])
+            out.append(mapping[lower])
         elif lower in reverse:
-            converted.append(reverse[lower])
+            out.append(reverse[lower])
         else:
-            converted.append(ch)
-    return "".join(converted)
+            out.append(ch)
+    return "".join(out)

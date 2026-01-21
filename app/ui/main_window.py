@@ -22,11 +22,13 @@ from PySide6.QtWidgets import (
 
 from app.data_store import DataStore
 from app.engine import BinderEngine
+from app.hotkeys import get_keyboard, normalize_hotkey
 from app.log_store import append_event
 from .bind_editor_dialog import BindEditorDialog
+from .hotkey_editor_dialog import HotkeyEditorDialog
 from .logs_window import LogsWindow
 from .update_dialog import UpdateDialog
-from .pages import binds, help as help_page, import_export, personalization, profiles, settings
+from .pages import binds, help as help_page, hotkeys, import_export, personalization, profiles, settings
 
 
 class MainWindow(QMainWindow):
@@ -35,6 +37,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Binder")
         self.setMinimumSize(1100, 720)
         self.logs_window: LogsWindow | None = None
+        self._settings_hotkey_handles: list[int] = []
         self.store = DataStore()
         self.engine = BinderEngine(append_event)
         self.engine.start()
@@ -87,6 +90,7 @@ class MainWindow(QMainWindow):
         buttons = [
             "Профили",
             "Бинды",
+            "Hotkeys / Макросы",
             "Персонализация",
             "Настройки",
             "Импорт/Экспорт",
@@ -130,6 +134,13 @@ class MainWindow(QMainWindow):
         self.binds_page.import_requested.connect(self.handle_binds_import)
         self.binds_page.binder_toggled.connect(self.handle_binder_toggle)
         stack.addWidget(self.binds_page)
+
+        self.hotkeys_page = hotkeys.HotkeysPage()
+        self.hotkeys_page.add_requested.connect(self.open_hotkey_editor_create)
+        self.hotkeys_page.edit_requested.connect(self.open_hotkey_editor_edit)
+        self.hotkeys_page.delete_requested.connect(self.handle_hotkey_delete_clicked)
+        self.hotkeys_page.test_requested.connect(self.handle_hotkey_test)
+        stack.addWidget(self.hotkeys_page)
 
         self.personalization_page = personalization.PersonalizationPage()
         self.personalization_page.changed.connect(self.handle_personalization_changed)
@@ -303,6 +314,107 @@ class MainWindow(QMainWindow):
         )
         self.refresh_binds()
 
+    def open_hotkey_editor_create(self) -> None:
+        profile = self.store.get_active_profile()
+        settings = profile.get("settings", {})
+        dialog = HotkeyEditorDialog(
+            self,
+            mode="create",
+            commit_keys=set(settings.get("commit_keys", [])),
+            triggers=self.store.trigger_set(profile.get("id")),
+            settings_hotkeys=settings.get("hotkeys", {}),
+        )
+        dialog.saved.connect(self.handle_hotkey_saved)
+        dialog.test_requested.connect(self.handle_hotkey_test_steps)
+        dialog.exec()
+
+    def open_hotkey_editor_edit(self, hotkey_id: str) -> None:
+        hotkey_data = self.store.get_hotkey(hotkey_id)
+        if not hotkey_data:
+            return
+        profile = self.store.get_active_profile()
+        settings = profile.get("settings", {})
+        dialog = HotkeyEditorDialog(
+            self,
+            mode="edit",
+            hotkey_data=hotkey_data,
+            commit_keys=set(settings.get("commit_keys", [])),
+            triggers=self.store.trigger_set(profile.get("id")),
+            settings_hotkeys=settings.get("hotkeys", {}),
+        )
+        dialog.saved.connect(self.handle_hotkey_saved)
+        dialog.test_requested.connect(self.handle_hotkey_test_steps)
+        dialog.exec()
+
+    def handle_hotkey_saved(self, payload: dict) -> None:
+        profile = self.store.get_active_profile()
+        hotkey_data = dict(payload)
+        if hotkey_data.get("id"):
+            before = self.store.get_hotkey(hotkey_data["id"])
+            self.store.update_hotkey(hotkey_data["id"], hotkey_data)
+            event_type = "macro_edited"
+            meta = {"before": before, "after": hotkey_data}
+        else:
+            created = self.store.add_hotkey(hotkey_data)
+            event_type = "macro_created"
+            meta = {"hotkey_id": created.get("id"), "title": created.get("title")}
+
+        append_event(
+            {
+                "type": event_type,
+                "entity": "hotkey",
+                "profile_id": profile.get("id"),
+                "profile_name": profile.get("name"),
+                "meta": meta,
+            }
+        )
+        self.refresh_hotkeys()
+
+    def handle_hotkey_delete_clicked(self, hotkey_id: str) -> None:
+        result = QMessageBox.question(
+            self,
+            "Удалить макрос",
+            "Удалить выбранный макрос?",
+            QMessageBox.Yes | QMessageBox.Cancel,
+        )
+        if result == QMessageBox.Yes:
+            self.handle_hotkey_deleted(hotkey_id)
+
+    def handle_hotkey_deleted(self, hotkey_id: str) -> None:
+        profile = self.store.get_active_profile()
+        before = self.store.get_hotkey(hotkey_id)
+        if self.store.delete_hotkey(hotkey_id):
+            append_event(
+                {
+                    "type": "macro_deleted",
+                    "entity": "hotkey",
+                    "profile_id": profile.get("id"),
+                    "profile_name": profile.get("name"),
+                    "meta": {
+                        "hotkey_id": hotkey_id,
+                        "title": before.get("title") if before else "",
+                    },
+                }
+            )
+            self.refresh_hotkeys()
+
+    def handle_hotkey_test(self, hotkey_id: str) -> None:
+        hotkey = self.store.get_hotkey(hotkey_id)
+        if not hotkey:
+            return
+        self.handle_hotkey_test_steps(hotkey.get("steps", []), title=hotkey.get("title", ""))
+
+    def handle_hotkey_test_steps(self, steps: list[dict], title: str = "") -> None:
+        if not self.engine.available:
+            QMessageBox.information(self, "Hotkeys", "Доступно только на Windows.")
+            return
+        profile = self.store.get_active_profile()
+        settings_data = profile.get("settings", {})
+        if not settings_data.get("binder_enabled", True):
+            QMessageBox.information(self, "Hotkeys", "Binder выключен. Включите для запуска макроса.")
+            return
+        self.engine.run_macro_steps(steps, title=title)
+
     def handle_bind_deleted(self, bind_id: str) -> None:
         active_profile = self.store.get_active_profile()
         before = self.store.get_bind(bind_id)
@@ -386,6 +498,13 @@ class MainWindow(QMainWindow):
             self.binds_page.set_prefix(prefix)
             self.binds_page.set_binds(self.store.list_binds(profile.get("id")))
             self.binds_page.set_binder_enabled(settings_data.get("binder_enabled", True))
+            self.binds_page.set_engine_available(self.engine.available)
+        self.update_engine_config()
+
+    def refresh_hotkeys(self) -> None:
+        if isinstance(self.hotkeys_page, hotkeys.HotkeysPage):
+            profile = self.store.get_active_profile()
+            self.hotkeys_page.set_hotkeys(self.store.list_hotkeys(profile.get("id")))
         self.update_engine_config()
 
     def handle_personalization_changed(self, payload: dict) -> None:
@@ -446,21 +565,31 @@ class MainWindow(QMainWindow):
         data = self._read_import_file()
         if not data:
             return
+        binds_count = 0
         if isinstance(data, list):
             profile_payload = dict(self.store.get_active_profile())
             profile_payload["name"] = "imported"
             profile_payload["binds"] = data
             profile = self.store.import_profile(profile_payload, name_override="imported")
+            binds_count = len(data)
         else:
             name = data.get("name", "imported")
             profile = self.store.import_profile(data, name_override=name)
+            binds_count = len(profile.get("binds", []))
+        self.store.set_active_profile(profile.get("id"))
         append_event(
             {
                 "type": "import",
                 "entity": "profile",
                 "profile_id": profile.get("id"),
                 "profile_name": profile.get("name"),
-                "meta": {"name": profile.get("name")},
+                "meta": {
+                    "name": profile.get("name"),
+                    "count": binds_count,
+                    "added": binds_count,
+                    "skipped": 0,
+                    "conflicts": 0,
+                },
             }
         )
         self.refresh_all()
@@ -471,18 +600,28 @@ class MainWindow(QMainWindow):
         data = self._read_import_file()
         if not data:
             return
-        binds_data = data.get("binds", data if isinstance(data, list) else [])
+        if isinstance(data, list):
+            binds_data = data
+        elif isinstance(data, dict):
+            binds_data = data.get("binds", [])
+        else:
+            binds_data = []
         if not binds_data:
             return
         mode = self._choose_conflict_mode()
         if not mode:
             return
         existing = {b.get("trigger"): b for b in self.store.list_binds(profile_id)}
+        added = 0
+        skipped = 0
+        conflicts = 0
         for bind in binds_data:
             trigger = bind.get("trigger", "")
             if trigger in existing:
+                conflicts += 1
                 if mode == "replace":
                     self.store.update_bind(existing[trigger]["id"], bind, profile_id)
+                    added += 1
                 elif mode == "suffix":
                     suffix = 2
                     new_trigger = f"{trigger}_{suffix}"
@@ -493,11 +632,14 @@ class MainWindow(QMainWindow):
                     bind["trigger"] = new_trigger
                     self.store.add_bind(bind, profile_id)
                     existing[new_trigger] = bind
+                    added += 1
                 elif mode == "skip":
+                    skipped += 1
                     continue
             else:
                 self.store.add_bind(bind, profile_id)
                 existing[trigger] = bind
+                added += 1
 
         profile = self.store.get_profile(profile_id)
         append_event(
@@ -506,7 +648,13 @@ class MainWindow(QMainWindow):
                 "entity": "bind",
                 "profile_id": profile.get("id"),
                 "profile_name": profile.get("name"),
-                "meta": {"count": len(binds_data), "mode": mode},
+                "meta": {
+                    "count": len(binds_data),
+                    "added": added,
+                    "skipped": skipped,
+                    "conflicts": conflicts,
+                    "mode": mode,
+                },
             }
         )
         self.refresh_binds()
@@ -551,7 +699,9 @@ class MainWindow(QMainWindow):
         settings_data = profile.get("settings", {})
         binds_list = self.store.list_binds(profile.get("id"))
         variables = profile.get("variables", {})
-        self.engine.update_config(profile, settings_data, binds_list, variables)
+        hotkeys_list = self.store.list_hotkeys(profile.get("id"))
+        self.engine.update_config(profile, settings_data, binds_list, variables, hotkeys_list)
+        self._refresh_settings_hotkeys(settings_data)
 
     def closeEvent(self, event) -> None:
         self.engine.stop()
@@ -566,7 +716,88 @@ class MainWindow(QMainWindow):
         self.binds_page.set_prefix(prefix)
         self.binds_page.set_binds(self.store.list_binds(active.get("id")))
         self.binds_page.set_binder_enabled(settings_data.get("binder_enabled", True))
+        self.binds_page.set_engine_available(self.engine.available)
+        self.hotkeys_page.set_hotkeys(self.store.list_hotkeys(active.get("id")))
         self.personalization_page.set_values(active.get("variables", {}))
         self.settings_page.set_settings(settings_data)
         self.import_export_page.set_profiles(profiles_list, active.get("id"))
         self.update_engine_config()
+
+    def _refresh_settings_hotkeys(self, settings: dict) -> None:
+        kb = get_keyboard()
+        if kb is None:
+            return
+        for handle in self._settings_hotkey_handles:
+            try:
+                kb.remove_hotkey(handle)
+            except Exception:
+                continue
+        self._settings_hotkey_handles = []
+
+        hotkeys = settings.get("hotkeys", {})
+        handlers = {
+            "toggle": self._handle_toggle_hotkey,
+            "open": self._handle_open_hotkey,
+            "profile_switch": self._handle_profile_switch_hotkey,
+        }
+        for key, handler in handlers.items():
+            combo = normalize_hotkey(str(hotkeys.get(key, "")))
+            if not combo:
+                continue
+            try:
+                handle = kb.add_hotkey(combo, handler)
+            except Exception:
+                QMessageBox.warning(
+                    self,
+                    "Хоткей",
+                    f"Не удалось зарегистрировать хоткей для '{key}': {combo}.",
+                )
+                continue
+            self._settings_hotkey_handles.append(handle)
+
+    def _handle_toggle_hotkey(self) -> None:
+        profile = self.store.get_active_profile()
+        settings_data = profile.get("settings", {})
+        enabled = not settings_data.get("binder_enabled", True)
+        settings_data["binder_enabled"] = enabled
+        self.store.update_settings(profile.get("id"), settings_data)
+        append_event(
+            {
+                "type": "settings_changed",
+                "entity": "settings",
+                "profile_id": profile.get("id"),
+                "profile_name": profile.get("name"),
+                "meta": {"binder_enabled": enabled},
+            }
+        )
+        self.refresh_binds()
+
+    def _handle_open_hotkey(self) -> None:
+        self.show()
+        self.raise_()
+        self.activateWindow()
+
+    def _handle_profile_switch_hotkey(self) -> None:
+        profiles = self.store.list_profiles()
+        if not profiles:
+            return
+        active = self.store.get_active_profile()
+        ids = [p.get("id") for p in profiles]
+        try:
+            current_index = ids.index(active.get("id"))
+        except ValueError:
+            current_index = 0
+        next_index = (current_index + 1) % len(ids)
+        next_id = ids[next_index]
+        self.store.set_active_profile(next_id)
+        profile = self.store.get_profile(next_id)
+        append_event(
+            {
+                "type": "profile_switched",
+                "entity": "profile",
+                "profile_id": profile.get("id"),
+                "profile_name": profile.get("name"),
+                "meta": {"name": profile.get("name")},
+            }
+        )
+        self.refresh_all()

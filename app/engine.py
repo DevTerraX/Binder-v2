@@ -1,11 +1,13 @@
+import os
 import sys
+import threading
+import time
+from ctypes import wintypes
+import ctypes
 from datetime import datetime
 from typing import Any
 
-try:
-    import keyboard as _keyboard  # type: ignore
-except Exception:  # pragma: no cover - optional dependency
-    _keyboard = None
+from app.hotkeys import get_keyboard
 
 
 class BinderEngine:
@@ -19,20 +21,28 @@ class BinderEngine:
         self._prefixes = ["."]
         self._commit_keys = {"space"}
         self._binds: list[dict[str, Any]] = []
+        self._hotkeys: list[dict[str, Any]] = []
+        self._apps_only: list[str] = []
+        self._apps_exclude: list[str] = []
         self._variables: dict[str, str] = {}
         self._active_profile: dict[str, Any] = {}
-        self.available = sys.platform == "win32" and _keyboard is not None
+        self._hotkey_handles: list[int] = []
+        self._macro_running = False
+        self.available = sys.platform == "win32" and get_keyboard() is not None
+        self._kb = get_keyboard()
 
     def start(self) -> None:
         if not self.available or self._hook is not None:
             return
-        self._hook = _keyboard.hook(self._on_event)
+        self._hook = self._kb.hook(self._on_event)
+        self._refresh_hotkeys()
 
     def stop(self) -> None:
         if self._hook is None or not self.available:
             return
-        _keyboard.unhook(self._hook)
+        self._kb.unhook(self._hook)
         self._hook = None
+        self._clear_hotkeys()
 
     def update_config(
         self,
@@ -40,6 +50,7 @@ class BinderEngine:
         settings: dict[str, Any],
         binds: list[dict[str, Any]],
         variables: dict[str, Any],
+        hotkeys: list[dict[str, Any]] | None = None,
     ) -> None:
         self._active_profile = profile
         self._enabled = bool(settings.get("binder_enabled", True))
@@ -48,6 +59,10 @@ class BinderEngine:
         self._prefixes = settings.get("trigger_prefixes", ["."]) or ["."]
         self._commit_keys = set(settings.get("commit_keys", ["space"]))
         self._binds = binds
+        self._hotkeys = hotkeys or []
+        apps_filter = settings.get("apps_filter", {}) or {}
+        self._apps_only = self._split_list(apps_filter.get("only", ""))
+        self._apps_exclude = self._split_list(apps_filter.get("exclude", ""))
         self._variables = {
             "discord_me": str(variables.get("discord_me", "")),
             "discord_zga": str(variables.get("discord_zga", "")),
@@ -55,6 +70,7 @@ class BinderEngine:
             "me_name": str(variables.get("me_name", "")),
             "gender": str(variables.get("gender", "male")),
         }
+        self._refresh_hotkeys()
 
     def _on_event(self, event) -> None:
         if event.event_type != "down":
@@ -74,6 +90,17 @@ class BinderEngine:
     def _handle_commit(self, key_name: str) -> None:
         if key_name not in self._commit_keys:
             self._debug("commit_key_disabled", {"key": key_name})
+            return
+        if not self._is_app_allowed():
+            self._debug(
+                "app_not_allowed",
+                {
+                    "app": self._active_app_name(),
+                    "only": self._apps_only,
+                    "exclude": self._apps_exclude,
+                },
+            )
+            self._buffer = ""
             return
         token = self._buffer
         self._buffer = ""
@@ -154,15 +181,15 @@ class BinderEngine:
         if bind_type == "Multi":
             lines = [line for line in content.splitlines() if line.strip()]
             for index, line in enumerate(lines):
-                _keyboard.write(apply_variables(line, self._variables))
+                self._kb.write(apply_variables(line, self._variables))
                 if index < len(lines) - 1:
-                    _keyboard.send("enter")
+                    self._kb.send("enter")
         else:
-            _keyboard.write(apply_variables(content, self._variables))
+            self._kb.write(apply_variables(content, self._variables))
 
     def _erase_token(self, count: int) -> None:
         for _ in range(max(0, count)):
-            _keyboard.send("backspace")
+            self._kb.send("backspace")
 
     def _debug(self, reason: str, meta: dict[str, Any]) -> None:
         self._log(
@@ -174,6 +201,158 @@ class BinderEngine:
                 "meta": {"reason": reason, **meta},
             }
         )
+
+    def _split_list(self, value: str) -> list[str]:
+        return [item.strip().lower() for item in value.split(",") if item.strip()]
+
+    def _is_app_allowed(self) -> bool:
+        if not self._apps_only and not self._apps_exclude:
+            return True
+        app = self._active_app_name()
+        if not app:
+            return True
+        if self._apps_only and app not in self._apps_only:
+            return False
+        if self._apps_exclude and app in self._apps_exclude:
+            return False
+        return True
+
+    def _active_app_name(self) -> str:
+        if sys.platform != "win32":
+            return ""
+        return get_active_process_name()
+
+    def _refresh_hotkeys(self) -> None:
+        if not self.available or self._kb is None:
+            return
+        self._clear_hotkeys()
+        for hotkey in self._hotkeys:
+            combo = str(hotkey.get("hotkey", "")).strip()
+            if not combo:
+                continue
+            handle = self._kb.add_hotkey(combo, lambda hk=hotkey: self._on_hotkey(hk))
+            self._hotkey_handles.append(handle)
+
+    def _clear_hotkeys(self) -> None:
+        if not self.available or self._kb is None:
+            return
+        for handle in self._hotkey_handles:
+            try:
+                self._kb.remove_hotkey(handle)
+            except Exception:  # pragma: no cover - safety
+                continue
+        self._hotkey_handles = []
+
+    def _on_hotkey(self, hotkey: dict[str, Any]) -> None:
+        if not self._enabled:
+            return
+        if self._macro_running:
+            return
+        steps = hotkey.get("steps", []) or []
+        if not steps:
+            return
+        self._macro_running = True
+        thread = threading.Thread(
+            target=self._run_macro,
+            args=(hotkey, steps),
+            daemon=True,
+        )
+        thread.start()
+
+    def run_macro_steps(self, steps: list[dict[str, Any]], title: str = "") -> None:
+        if not self._enabled or self._macro_running or not steps:
+            return
+        hotkey = {"id": "manual", "hotkey": "", "title": title}
+        self._macro_running = True
+        thread = threading.Thread(
+            target=self._run_macro,
+            args=(hotkey, steps),
+            daemon=True,
+        )
+        thread.start()
+
+    def _run_macro(self, hotkey: dict[str, Any], steps: list[dict[str, Any]]) -> None:
+        if not self.available or self._kb is None:
+            self._macro_running = False
+            return
+        self._log(
+            {
+                "type": "macro_run",
+                "entity": "hotkey",
+                "profile_id": self._active_profile.get("id"),
+                "profile_name": self._active_profile.get("name"),
+                "meta": {
+                    "hotkey_id": hotkey.get("id"),
+                    "hotkey": hotkey.get("hotkey"),
+                    "title": hotkey.get("title", ""),
+                },
+            }
+        )
+        try:
+            for step in steps:
+                step_type = step.get("type")
+                value = str(step.get("value", ""))
+                delay = float(step.get("delay", 0) or 0)
+
+                if step_type == "press_key":
+                    if value:
+                        self._kb.send(value)
+                elif step_type == "type_text":
+                    self._kb.write(value)
+                    if step.get("enter"):
+                        self._kb.send("enter")
+                elif step_type == "press_enter":
+                    self._kb.send("enter")
+                elif step_type == "delay":
+                    pass
+
+                if delay > 0:
+                    time.sleep(delay)
+        except Exception as exc:  # pragma: no cover - runtime guard
+            self._log(
+                {
+                    "type": "macro_error",
+                    "entity": "hotkey",
+                    "profile_id": self._active_profile.get("id"),
+                    "profile_name": self._active_profile.get("name"),
+                    "meta": {
+                        "hotkey_id": hotkey.get("id"),
+                        "hotkey": hotkey.get("hotkey"),
+                        "error": str(exc),
+                    },
+                }
+            )
+        finally:
+            self._macro_running = False
+
+
+def get_active_process_name() -> str:
+    if sys.platform != "win32":
+        return ""
+    try:
+        user32 = ctypes.WinDLL("user32", use_last_error=True)
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+
+        hwnd = user32.GetForegroundWindow()
+        if not hwnd:
+            return ""
+        pid = wintypes.DWORD()
+        user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+
+        access = 0x1000 | 0x0400  # PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_VM_READ
+        process = kernel32.OpenProcess(access, False, pid.value)
+        if not process:
+            return ""
+        try:
+            buf = ctypes.create_unicode_buffer(260)
+            size = wintypes.DWORD(len(buf))
+            if kernel32.QueryFullProcessImageNameW(process, 0, buf, ctypes.byref(size)):
+                return os.path.basename(buf.value).lower()
+        finally:
+            kernel32.CloseHandle(process)
+    except Exception:
+        return ""
+    return ""
 
 
 def apply_variables(text: str, variables: dict[str, str]) -> str:
